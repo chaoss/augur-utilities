@@ -1,8 +1,8 @@
-linux
-pytorch
-kubernetes
-networkx
+OpenMM
+NetworkX
+Neurodesk
+crsu-apps
+cran
+superelastix
+slicer
 chaoss
-rust
-apache
-numpy
