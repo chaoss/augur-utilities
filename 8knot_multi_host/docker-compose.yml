@@ -5,7 +5,7 @@ services:
 
   instance1:
     build:
-      context: /home/sean/github/wellcome/8knot
+      context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     env_file:
       - ./envs/instance1.env
@@ -18,7 +18,7 @@ services:
 
   instance2:
     build:
-      context: /home/sean/github/wellcome/8knot
+      context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     env_file:
       - ./envs/instance2.env
@@ -31,7 +31,7 @@ services:
 
   instance3:
     build:
-      context: /home/sean/github/wellcome/8knot
+      context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     env_file:
       - ./envs/instance3.env
@@ -44,7 +44,7 @@ services:
 
   instance4:
     build:
-      context: /home/sean/github/wellcome/8knot
+      context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     env_file:
       - ./envs/instance4.env
@@ -57,7 +57,7 @@ services:
 
   instance5:
     build:
-      context: /home/sean/github/wellcome/8knot
+      context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     env_file:
       - ./envs/instance5.env
@@ -70,7 +70,7 @@ services:
 
   instance6:
     build:
-      context: /home/sean/github/wellcome/8knot
+      context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     env_file:
       - ./envs/instance6.env
@@ -83,7 +83,7 @@ services:
 
   instance7:
     build:
-      context: /home/sean/github/wellcome/8knot
+      context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     env_file:
       - ./envs/instance7.env
@@ -96,7 +96,7 @@ services:
 
   instance8:
     build:
-      context: /home/sean/github/wellcome/8knot
+      context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     env_file:
       - ./envs/instance8.env

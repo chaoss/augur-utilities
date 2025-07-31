@@ -10,9 +10,9 @@ base_dir = sys.argv[1] if len(sys.argv) > 1 else '.'
 os.makedirs("envs", exist_ok=True)
 
 placeholder = """ # Environment for Augur instance {i}
-AUGUR_DATABASE={{your value here}}
-AUGUR_HOST={{your value here}}
-AUGUR_PASSWORD={{your value here}} 
+AUGUR_DATABASE=augur
+AUGUR_HOST=192.168.1.126
+AUGUR_PASSWORD=augur
 AUGUR_PORT={{DATABASE PORT HERE}}
 AUGUR_SCHEMA=augur_data
 AUGUR_USERNAME=augur
