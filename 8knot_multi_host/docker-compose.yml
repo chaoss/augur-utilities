@@ -1081,11 +1081,12 @@ services:
       timeout: 5s
       retries: 5
 
-
 networks:
-  default:
-    external: true
-    name: 8knet
-
-volumes:
-  postgres-cache:
+  knot1:
+  knot2:
+  knot3:
+  knot4:
+  knot5:
+  knot6:
+  knot7:
+  knot8:

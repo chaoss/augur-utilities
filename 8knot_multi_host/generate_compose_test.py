@@ -176,16 +176,21 @@ for i in range(1, INSTANCES + 1):
       retries: 5
 """)
 
-# Shared network
-compose_lines.append("""
-networks:
-  default:
-    external: true
-    name: 8knet
+# Networks section
+compose_lines.append("networks:")
+for i in range(1, INSTANCES + 1):
+    compose_lines.append(f"  knot{i}:")
 
-volumes:
-  postgres-cache:
-""")
+# Shared network
+#compose_lines.append("""
+#networks:
+#  default:
+#    external: true
+#    name: 8knet
+
+#volumes:
+#  postgres-cache:
+#""")
 
 # Write docker-compose.yml
 with open("docker-compose.yml", "w") as f:
