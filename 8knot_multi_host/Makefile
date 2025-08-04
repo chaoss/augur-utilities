@@ -5,6 +5,10 @@ INSTANCE ?= 1
 
 all: up
 
+regen:
+	@echo "Rebuilding docker-compose.yml ..."
+	python3 generate_compose.py
+
 build:
 	$(COMPOSE) build
 
