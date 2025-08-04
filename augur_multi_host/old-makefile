@@ -5,9 +5,6 @@ INSTANCE ?= 1
 
 all: up
 
-build:
-	AUGUR_PATH=/Users/sean/github/wellcome-prod/augur-1  $(COMPOSE) build
-
 up:
 	$(COMPOSE) up -d
 
@@ -15,24 +12,16 @@ down:
 	$(COMPOSE) down --remove-orphans
 
 regen:
-	@echo "Regenerating PostgreSQL config files only..."
+	@echo "Cleaning old configuration..."
+	rm -rf postgres
+	mkdir -p postgres
 	@for i in 1 2 3 4 5 6 7 8; do \
 		mkdir -p postgres/augur$$i; \
-		echo "# Custom PostgreSQL configuration" > postgres/augur$$i/postgresql.conf; \
-		echo "listen_addresses = '*'" >> postgres/augur$$i/postgresql.conf; \
-		echo "max_connections = 1000" >> postgres/augur$$i/postgresql.conf; \
-		echo "shared_buffers = 10GB" >> postgres/augur$$i/postgresql.conf; \
-		echo "work_mem = 3GB" >> postgres/augur$$i/postgresql.conf; \
-		echo "maintenance_work_mem = 2GB" >> postgres/augur$$i/postgresql.conf; \
-		echo "effective_cache_size = 1GB" >> postgres/augur$$i/postgresql.conf; \
-		echo "max_wal_size = 1GB" >> postgres/augur$$i/postgresql.conf; \
-		echo "min_wal_size = 1GB" >> postgres/augur$$i/postgresql.conf; \
-		echo "wal_buffers = 64MB" >> postgres/augur$$i/postgresql.conf; \
+		echo "listen_addresses = '*'" > postgres/augur$$i/postgresql.conf; \
 		echo "host all all 0.0.0.0/0 md5" > postgres/augur$$i/pg_hba.conf; \
-		echo "host all all ::/0 md5" >> postgres/augur$$i/pg_hba.conf; \
 	done
 	@echo "Rebuilding docker-compose.yml ..."
-	python3 generate_compose.py ${AUGUR_PATH}
+	python3 generate_compose.py
 
 nginx:
 	python3 generate_nginx.py $(DOMAIN)
@@ -59,12 +48,12 @@ ps:
 status:
 	@echo "Environment files for Augur instances:"
 	@for i in $$(seq 1 $(INSTANCES)); do \
-		f=envs/augur$$i.env; \
-		if [ -f $$f ]; then \
-			echo "  $$f (exists)"; \
-		else \
-			echo "  $$f (MISSING)"; \
-		fi; \
+	  f=envs/augur$$i.env; \
+	  if [ -f $$f ]; then \
+	    echo "  $$f (exists)"; \
+	  else \
+	    echo "  $$f (MISSING)"; \
+	  fi; \
 	done
 
 # Force stop all containers on the system
