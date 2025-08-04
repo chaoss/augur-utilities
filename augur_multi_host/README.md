@@ -3,6 +3,8 @@
 
 There is a refined version of many of these instructions at (HERE)[./augur_deploy_cheatsheet.md]
 
+This is the [make helpfile.(./MAKEFILE_HELP.md)
+
 # Multi-Instance Augur Deployment (8 instances)
 
 This setup runs 8 fully isolated Augur instances using Podman and Nginx with automatic Let's Encrypt certificates.
