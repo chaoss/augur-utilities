@@ -22,17 +22,16 @@ fi
 for CONTAINER in $CONTAINERS; do
   echo "📦 Dumping database from: $CONTAINER"
 
-  # Extract instance number if possible (e.g., augur1, augur2)
+  # Extract instance label, e.g., augur1, augur2
   INSTANCE=$(echo "$CONTAINER" | grep -o 'augur[0-9]\+' || echo "$CONTAINER")
-  
-  OUTPUT_FILE="$BACKUP_DIR/${INSTANCE}_dump_${TIMESTAMP}.sql"
+  OUTPUT_FILE="$BACKUP_DIR/${INSTANCE}_dump_${TIMESTAMP}.sql.gz"
 
-  if podman exec "$CONTAINER" pg_dumpall -U augur > "$OUTPUT_FILE"; then
-    echo "✅ Saved: $OUTPUT_FILE"
+  if podman exec "$CONTAINER" pg_dumpall -U augur | gzip > "$OUTPUT_FILE"; then
+    echo "✅ Compressed and saved: $OUTPUT_FILE"
   else
     echo "❌ Failed to dump: $CONTAINER"
   fi
 done
 
 echo
-echo "🎉 All detected database containers have been backed up."
+echo "🎉 All detected database containers have been backed up (gzipped)."
