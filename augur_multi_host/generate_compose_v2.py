@@ -16,11 +16,10 @@ wal_buffers = 64MB
 """
 # --- End custom PostgreSQL configuration template ---
 
-# Usage: python3 generate_compose.py /path/to/augur/clone [--force]
+# Usage: python3 generate_compose.py /path/to/augur/clone
 # Default context is current directory if not given.
 instances = 8
 augur_path = sys.argv[1] if len(sys.argv) > 1 else '.'
-force = "--force" in sys.argv
 
 # Ensure envs directory exists
 os.makedirs("envs", exist_ok=True)
@@ -143,9 +142,9 @@ for i in range(1, instances + 1):
             "host all all ::/0 md5\n"
         )
 
-    # Prompt before overwriting env files unless --force is set
+    # Prompt before overwriting env files
     env_file = os.path.join("envs", f"augur{i}.env")
-    if os.path.exists(env_file) and not force:
+    if os.path.exists(env_file):
         overwrite = input(f"envs/augur{i}.env already exists. Overwrite? [y/N]: ").strip().lower()
         if overwrite != "y":
             print(f"  Skipping envs/augur{i}.env")
