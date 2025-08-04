@@ -48,6 +48,21 @@ COMPOSE = podman-compose
    make nginx
    ```
 
+   Initial Build: 
+
+   ```bash
+   make regen    # always regenerate compose + config first
+   make build    # only needed if base image or Dockerfile changed
+   make up       # starts all services
+   ```
+
+   Subsequent Starts: 
+   
+   ```bash
+   make regen
+   make up 
+   ```
+
    There are parameters available for specifying the location of your Augur clone as well. This will allow you to use this code as an "orchestration directory" that pulls in code from Augur. 
    ```bash
    make regen AUGUR_PATH=/Users/sean/github/wellcome-prod/augur-1 

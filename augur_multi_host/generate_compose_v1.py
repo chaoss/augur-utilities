@@ -8,6 +8,7 @@ listen_addresses = '*'
 max_connections = 1000
 shared_buffers = 10GB
 work_mem = 3GB
+shared_buffers = 10GB
 maintenance_work_mem = 2GB
 effective_cache_size = 1GB
 max_wal_size = 1GB
@@ -43,13 +44,12 @@ service_block = """
       - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_INITDB_ARGS=--config-file=/etc/postgresql/postgresql.conf
     ports:
       - "{pg_port}:5432"
     volumes:
       - augur{i}-postgres:/var/lib/postgresql/data
-      - ./postgres/augur{i}/postgresql.conf:/etc/postgresql/postgresql.conf
-      - ./postgres/augur{i}/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./postgres/augur{i}/postgresql.conf:/var/lib/postgresql/data/pgdata/postgresql.conf
+      - ./postgres/augur{i}/pg_hba.conf:/var/lib/postgresql/data/pgdata/pg_hba.conf
     networks: [augur{i}]
 
   augur{i}-redis:
