@@ -82,8 +82,19 @@ regen:
 	@echo "Rebuilding docker-compose.yml ..."
 	python3 generate_compose.py $(AUGUR_PATH) $(if $(FORCE),--force)
 
+#build:
+#	$(COMPOSE) build
+
 build:
-	$(COMPOSE) build
+	@echo "🔧 Building all services using podman-compose..."
+	@exit_code=0; \
+	$(COMPOSE) config --services | while read svc; do \
+		echo "📦 Building service: $$svc"; \
+	done; \
+	$(COMPOSE) build || exit_code=$$?; \
+	if [ $$exit_code -ne 0 ]; then \
+		echo "⚠️  podman-compose build exited with code $$exit_code, but continuing"; \
+	fi
 
 up:
 	$(COMPOSE) up -d
