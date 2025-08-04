@@ -36,8 +36,9 @@ regen:
 		echo "host all all 0.0.0.0/0 md5" > postgres/augur$$i/pg_hba.conf; \
 		echo "host all all ::/0 md5" >> postgres/augur$$i/pg_hba.conf; \
 	done
+	@echo "Regenerating config files..."
 	@echo "Rebuilding docker-compose.yml ..."
-	python3 generate_compose.py $(AUGUR_PATH)
+	python3 generate_compose.py $(AUGUR_PATH) $(if $(FORCE),--force)
 
 build:
 	$(COMPOSE) build
