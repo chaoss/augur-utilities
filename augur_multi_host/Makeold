@@ -5,9 +5,6 @@ INSTANCE ?= 1
 
 all: up
 
-build:
-	AUGUR_PATH=/Volumes/super_60/github/wellcome-prod/augur-1 $(COMPOSE) build
-
 up:
 	$(COMPOSE) up -d
 
@@ -24,7 +21,7 @@ regen:
 		echo "host all all 0.0.0.0/0 md5" > postgres/augur$$i/pg_hba.conf; \
 	done
 	@echo "Rebuilding docker-compose.yml ..."
-	python3 generate_compose.py ${AUGUR_PATH}
+	python3 generate_compose.py
 
 nginx:
 	python3 generate_nginx.py $(DOMAIN)
@@ -51,12 +48,12 @@ ps:
 status:
 	@echo "Environment files for Augur instances:"
 	@for i in $$(seq 1 $(INSTANCES)); do \
-		f=envs/augur$$i.env; \
-		if [ -f $$f ]; then \
-			echo "  $$f (exists)"; \
-		else \
-			echo "  $$f (MISSING)"; \
-		fi; \
+	  f=envs/augur$$i.env; \
+	  if [ -f $$f ]; then \
+	    echo "  $$f (exists)"; \
+	  else \
+	    echo "  $$f (MISSING)"; \
+	  fi; \
 	done
 
 # Force stop all containers on the system
