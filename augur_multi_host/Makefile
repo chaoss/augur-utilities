@@ -190,3 +190,53 @@ endif
 	fi
 	@echo "🚀 Bringing stack back up..."
 	$(MAKE) up
+
+define PRINT_HELP_PREAMBLE
+@echo ""
+@echo "📦 Augur Multi-Instance Makefile — Usage Reference"
+@echo "--------------------------------------------------"
+@echo ""
+endef
+
+define PRINT_HELP_SECTION
+	@echo ""
+	@echo "$(1):"
+	@echo "--------------------------------------------"
+	$(foreach line,$(2),@printf "  \033[36m%-24s\033[0m %s\n" $(word 1,$(line)) $(wordlist 2,99,$(line));)
+endef
+
+help:
+	$(call PRINT_HELP_PREAMBLE)
+	$(call PRINT_HELP_SECTION,"Core Deployment Commands",\
+		"make regen        Regenerate PostgreSQL configs and docker-compose.yml" \
+		"make build        Build all service images using podman-compose" \
+		"make up           Start all containers in detached mode" \
+		"make down         Stop and remove containers and orphaned networks" \
+		"make restart      Restart all running containers" \
+		"make all          Alias for make up" \
+		"make bootstrap    Run full deploy: regen → build → up" \
+		"make bootstrap-restore Full deploy + restore: regen → build → up → restore-all" \
+	)
+	$(call PRINT_HELP_SECTION,"Snapshot & Restore",\
+		"make snapshot     pg-only backup using pg_dumpall via snapshot_pg_volumes.sh" \
+		"make snapshot-db  Raw PostgreSQL volume archive to tar.gz" \
+		"make snapshot-all Full backup of DB, Redis, and config via snapshot_all.sh" \
+		"make restore-db   Restore a single augurX DB from a snapshot (use FILE=...)" \
+	)
+	$(call PRINT_HELP_SECTION,"Admin & Utilities",\
+		"make ps           List running containers" \
+		"make logs         Tail logs for augur\$$INSTANCE" \
+		"make shell        Shell into augur\$$INSTANCE container" \
+		"make status       Check for missing instance env files" \
+	)
+	$(call PRINT_HELP_SECTION,"Teardown & Cleanup",\
+		"make stop-all     Stop all running podman containers" \
+		"make clean        Remove containers/images/networks (preserves DB volumes)" \
+		"make nuke         Remove all instance containers and non-DB volumes" \
+		"make clean-networks Remove augur-related podman networks" \
+	)
+	$(call PRINT_HELP_SECTION,"SSL & Nginx Setup",\
+		"make nginx        Generate Nginx reverse proxy config" \
+		"make certbot      Run Certbot to issue SSL certs for all instances" \
+	)
+	@echo ""
