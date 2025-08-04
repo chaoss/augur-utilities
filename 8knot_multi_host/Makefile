@@ -36,6 +36,19 @@ status:
 stop-all:
 	podman stop $$(podman ps -q)
 
+# Force remove containers and networks for instances
 nuke:
-	-podman ps -a --format "{{.ID}} {{.Names}}" | grep instance || true | awk '{print $$1}' | xargs podman rm -f
-	-podman network ls --format "{{.Name}}" | grep knot | xargs podman network rm
+	-@echo "Removing instance containers..."
+	-@podman ps -a --format "{{.ID}} {{.Names}}" | grep instance | awk '{print $$1}' | xargs -r podman rm -f
+	-@echo "Removing instance volumes..."
+	-@podman volume ls --format "{{.Name}}" | grep instance | xargs -r podman volume rm
+	-@echo "Removing networks with 'knot' in their name..."
+	-@podman network ls --format "{{.Name}}" | grep knot | xargs -r podman network rm
+
+# Full clean: stop everything, remove containers/networks/volumes/images
+clean: down nuke
+	-@echo "Removing orphaned podman resources..."
+	-@podman volume prune -f
+	-@podman image prune -f
+	-@podman network prune -f
+	@echo "Clean complete."

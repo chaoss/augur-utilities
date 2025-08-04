@@ -1,6 +1,6 @@
-OpenMM
-NetworkX
-Neurodesk
+openmm
+networkx
+neurodesk
 crsu-apps
 cran
 superelastix
