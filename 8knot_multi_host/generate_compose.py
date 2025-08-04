@@ -60,7 +60,7 @@ for i in range(1, INSTANCES + 1):
     content = f"""# Environment for 8Knot instance {i}
 AUGUR_DATABASE=augur
 AUGUR_HOST=192.168.1.126
-AUGUR_PASSWORD=augur 
+AUGUR_PASSWORD=augur
 AUGUR_PORT={7000+i}
 AUGUR_SCHEMA=augur_data
 AUGUR_USERNAME=augur
