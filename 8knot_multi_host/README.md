@@ -27,6 +27,12 @@ make build
 make up
 ```
 
+## 4. Run only one instance
+
+```bash
+make up-one INSTANCE=3
+```
+
 Instances will be available on:
 - http://localhost:8091
 - ...
