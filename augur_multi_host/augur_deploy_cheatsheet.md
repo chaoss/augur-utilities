@@ -9,12 +9,12 @@ This document summarizes the full setup, snapshotting, and restoration process u
 Before you begin:
 
 - Ensure environment variables and paths are correct
-- Confirm `AUGUR_PATH` points to your Augur clone
+- Confirm `AUGUR_PATH` points to your Augur clone. Note that if you are working from a symlinked path, you need to, at least on OSX, use the actual, physical path. 
 
 ### ✅ Run a full deployment and restore
 
 ```bash
-make AUGUR_PATH=/absolute/path/to/augur bootstrap-restore
+make AUGUR_PATH=/absolute/path/to/augur bootstrap-restore 
 ```
 
 This performs:
@@ -86,6 +86,10 @@ podman exec -i augur_multi_host_augur4-db_1 psql -U augur -d postgres -f /tmp/du
 | `make snapshot-all`       | pg + redis + config backups                      |
 | `make restore-all`        | Restores databases from latest snapshot          |
 | `make bootstrap-restore`  | Full deploy and restore (regen, build, up, restore) |
+
+```bash
+make restore-db FILE=db_snapshots/augur1-postgres-20250804_154412.tar.gz
+```
 
 ---
 
