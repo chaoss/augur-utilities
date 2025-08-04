@@ -43,6 +43,14 @@ COMPOSE = podman-compose
    ```
 
 4. **Generate configs**
+
+   Cleaning up Podman: 
+
+   ```bash
+      podman system prune -af
+      podman volume prune
+   ```
+
    ```bash
    make regen
    make nginx
@@ -57,7 +65,7 @@ COMPOSE = podman-compose
    ```
 
    Subsequent Starts: 
-   
+
    ```bash
    make regen
    make up 

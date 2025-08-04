@@ -1,18 +1,23 @@
+# --- Global variables ---
 COMPOSE = podman-compose
 INSTANCES = 8
 DOMAIN = sociallycompute.io
 INSTANCE ?= 1
+AUGUR_PATH ?=
+
+ifndef AUGUR_PATH
+$(error AUGUR_PATH is not set. Use 'make AUGUR_PATH=/your/path bootstrap' or export it)
+endif
+
+# --- Primary targets ---
 
 all: up
 
-build:
-	AUGUR_PATH=/Users/sean/github/wellcome-prod/augur-1  $(COMPOSE) build
-
-up:
-	$(COMPOSE) up -d
-
-down:
-	$(COMPOSE) down --remove-orphans
+bootstrap:
+	@echo "Running full bootstrap: regen -> build -> up"
+	$(MAKE) regen
+	$(MAKE) build
+	$(MAKE) up
 
 regen:
 	@echo "Regenerating PostgreSQL config files only..."
@@ -32,7 +37,21 @@ regen:
 		echo "host all all ::/0 md5" >> postgres/augur$$i/pg_hba.conf; \
 	done
 	@echo "Rebuilding docker-compose.yml ..."
-	python3 generate_compose.py ${AUGUR_PATH}
+	python3 generate_compose.py $(AUGUR_PATH)
+
+build:
+	$(COMPOSE) build
+
+up:
+	$(COMPOSE) up -d
+
+down:
+	$(COMPOSE) down --remove-orphans
+
+restart:
+	$(COMPOSE) restart
+
+# --- Dev/admin tools ---
 
 nginx:
 	python3 generate_nginx.py $(DOMAIN)
@@ -40,22 +59,15 @@ nginx:
 certbot:
 	sudo certbot --nginx $(shell seq -f "-d augur%g.$(DOMAIN)" 1 $(INSTANCES))
 
-restart:
-	$(COMPOSE) restart
-
-# Open an interactive shell into the chosen augur instance
 shell:
 	$(COMPOSE) exec augur$(INSTANCE) /bin/bash
 
-# Show logs for the chosen augur instance
 logs:
 	$(COMPOSE) logs -f augur$(INSTANCE)
 
-# List all containers managed by this compose file
 ps:
 	$(COMPOSE) ps
 
-# Show status of environment files for all instances
 status:
 	@echo "Environment files for Augur instances:"
 	@for i in $$(seq 1 $(INSTANCES)); do \
@@ -67,7 +79,8 @@ status:
 		fi; \
 	done
 
-# Force stop all containers on the system
+# --- Teardown/cleanup ---
+
 stop-all:
 	podman stop $$(podman ps -q)
 
