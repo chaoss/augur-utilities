@@ -8,6 +8,12 @@ listen_addresses = '*'
 max_connections = 1000
 shared_buffers = 10GB
 work_mem = 3GB
+shared_buffers = 10GB
+maintenance_work_mem = 2GB
+effective_cache_size = 1GB
+max_wal_size = 1GB
+min_wal_size = 1GB
+wal_buffers = 64MB
 """
 # --- End custom PostgreSQL configuration template ---
 
