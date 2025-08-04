@@ -3,7 +3,9 @@
 
 There is a refined version of many of these instructions at (HERE)[./augur_deploy_cheatsheet.md]
 
-This is the [make helpfile.(./MAKEFILE_HELP.md)
+This is the [make helpfile.](./MAKEFILE_HELP.md)
+
+We have some notes about [troubleshooting pods that don't seem to be working here.](./troubleshooting-pods.md)
 
 # Multi-Instance Augur Deployment (8 instances)
 
