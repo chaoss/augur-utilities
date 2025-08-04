@@ -1,6 +1,8 @@
 # Operating Your Multi-Container Setup Once Deployed: 
 **NOTE**: For information about interacting with the containers once they are started, including Augur and the databases, see [RUNNING.md](./RUNNING.md)
 
+There is a refined version of many of these instructions at (HERE)[./augur_deploy_cheatsheet.md]
+
 # Multi-Instance Augur Deployment (8 instances)
 
 This setup runs 8 fully isolated Augur instances using Podman and Nginx with automatic Let's Encrypt certificates.

@@ -91,3 +91,18 @@ clean-networks:
 nuke:
 	-podman ps --all --format "{{.ID}} {{.Names}}" | grep augur_multi_host | awk '{print $$1}' | xargs podman rm -f
 	-podman network ls --format "{{.Name}}" | grep augur_multi_host_augur | xargs podman network rm
+
+snapshot-all:
+	@echo "📦 Running full instance + config + Redis snapshot..."
+	@bash ./snapshot_all.sh
+
+snapshot:
+	@echo "🧠 Creating PostgreSQL volume snapshots using pg_dumpall..."
+	@bash ./snapshot_pg_volumes.sh
+
+bootstrap-restore:
+	@echo "🚀 Running full bootstrap + restore (regen --force → build → up → restore-all)"
+	$(MAKE) FORCE=1 regen
+	$(MAKE) build
+	$(MAKE) up
+	$(MAKE) restore-all
