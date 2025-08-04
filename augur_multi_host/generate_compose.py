@@ -5,6 +5,7 @@ from pathlib import Path
 # --- Custom PostgreSQL configuration template ---
 postgres_conf_template = """# Custom PostgreSQL configuration
 listen_addresses = '*'
+hba_file = '/etc/postgresql/pg_hba.conf'
 max_connections = 1000
 shared_buffers = 10GB
 work_mem = 3GB
