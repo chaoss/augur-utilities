@@ -20,7 +20,7 @@ up:
 	@podman ps --format '{{.Names}}' | grep -E '^instance[0-9]+$$' || echo "  None running."
 	@echo "Bringing up all instances..."
 	$(COMPOSE) up -d
-	`
+	
 down:
 	$(COMPOSE) down --remove-orphans
 
