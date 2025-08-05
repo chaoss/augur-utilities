@@ -1,2 +1,4 @@
 envs/
+.secrets.env
 *.gz
+

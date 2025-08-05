@@ -7,6 +7,7 @@ instances = 8
 augur_path = sys.argv[1] if len(sys.argv) > 1 else "."
 force = "--force" in sys.argv
 
+# --- Template ---
 template = """version: '3.8'
 
 services:
@@ -18,7 +19,6 @@ volumes:
 networks:
 {networks}
 """
-
 
 postgres_conf_template = """listen_addresses = '*'
 max_connections = 1000
@@ -32,6 +32,7 @@ min_wal_size = 80MB
 hba_file = '/etc/postgresql/pg_hba.conf'
 """
 
+# --- Load labels.txt ---
 def get_labels():
     label_file = Path("labels.txt")
     if not label_file.exists():
@@ -43,16 +44,18 @@ def get_labels():
 
 labels = get_labels()
 
+# --- Generate .env files ---
 def generate_env_file(i):
     env_path = Path(f"envs/instance{i}.env")
     if env_path.exists() and not force:
         print(f"Skipping {env_path}")
         return
 
-
     label = labels[i - 1]
 
-    content = f"""POSTGRES_PASSWORD=password
+    content = f"""POSTGRES_DB=augur
+POSTGRES_USER=augur
+POSTGRES_PASSWORD=augur
 REDIS_PASSWORD=redispass{i}
 AUGUR_PORT={7000 + i}
 AUGUR_DATABASE=augur
@@ -67,10 +70,12 @@ REDIS_USERS_PORT=6379
 REDIS_USERS_PASSWORD=redispass4
 REDIS_CACHE_HOST=redis-cache-{i}
 REDIS_CACHE_PORT=6379
-REDIS_CACHE_PASSWORD=redispass4"""
+REDIS_CACHE_PASSWORD=redispass4
+POSTGRES_CACHE=postgres-cache-{i}"""
     env_path.write_text(content.strip())
     print(f"✅ Wrote {env_path} with label {label}")
 
+# --- Generate service blocks ---
 def generate_service_block(i):
     port = 8080 + i
     network = f"knot{i}"
@@ -87,9 +92,7 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: always
     networks:
-      {network}:
-        aliases:
-          - redis-cache
+      - {network}
 
   redis-users-{i}:
     image: docker.io/library/redis:6
@@ -101,18 +104,19 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: always
     networks:
-      {network}:
-        aliases:
-          - redis-users
+      - {network}
 
   postgres-cache-{i}:
-    image: docker.io/library/postgres:16
+    image: docker.io/library/postgres:17
     command:
       - postgres
       - -c
       - config_file=/etc/postgresql/postgresql.conf
     restart: unless-stopped
     environment:
+      - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
+      - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - augur{i}_db_data:/var/lib/postgresql/data
@@ -124,9 +128,7 @@ def generate_service_block(i):
       timeout: 5s
       retries: 5
     networks:
-      {network}:
-        aliases:
-          - postgres-cache
+      - {network}
 
   db-init-{i}:
     build:
@@ -207,13 +209,14 @@ def generate_service_block(i):
       - {network}
 """
 
+# --- Volumes & Networks ---
 def generate_volumes():
     return "\n".join([f"  augur{i}_db_data:" for i in range(1, instances + 1)])
 
 def generate_networks():
     return "\n".join([f"  knot{i}:" for i in range(1, instances + 1)])
 
-# --- Main Execution ---
+# --- Main ---
 services = ""
 for i in range(1, instances + 1):
     Path("envs").mkdir(exist_ok=True)
@@ -223,11 +226,11 @@ for i in range(1, instances + 1):
     Path(f"postgres/augur{i}/postgresql.conf").write_text(postgres_conf_template)
     services += generate_service_block(i)
 
-Path("docker-compose.yml").write_text("# Auto-generated docker-compose.yml\n" + template.format(
+compose_path = Path("docker-compose.yml")
+compose_path.write_text("# Auto-generated docker-compose.yml\n" + template.format(
     services=services,
     volumes=generate_volumes(),
     networks=generate_networks()
 ))
 
 print(f"✅ docker-compose.yml generated successfully for {instances} instances.")
-

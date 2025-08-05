@@ -15,7 +15,7 @@ source ~/.bashrc
 ## 2. Generate configuration
 
 ```bash
-python3 generate_compose.py /home/sean/github/8knot
+make regen REGEN_ARGS="/home/sean/github/8knot --force" 
 ```
 
 This creates `docker-compose.yml` and env files in `envs/`.
@@ -25,6 +25,12 @@ This creates `docker-compose.yml` and env files in `envs/`.
 ```bash
 make build
 make up
+```
+
+## 4. Run only one instance
+
+```bash
+make up-one INSTANCE=3
 ```
 
 Instances will be available on:

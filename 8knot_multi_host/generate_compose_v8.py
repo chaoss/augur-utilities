@@ -19,7 +19,6 @@ networks:
 {networks}
 """
 
-
 postgres_conf_template = """listen_addresses = '*'
 max_connections = 1000
 shared_buffers = 1GB
@@ -49,10 +48,11 @@ def generate_env_file(i):
         print(f"Skipping {env_path}")
         return
 
-
     label = labels[i - 1]
 
-    content = f"""POSTGRES_PASSWORD=password
+    content = f"""POSTGRES_DB=augur
+POSTGRES_USER=augur
+POSTGRES_PASSWORD=augur
 REDIS_PASSWORD=redispass{i}
 AUGUR_PORT={7000 + i}
 AUGUR_DATABASE=augur
@@ -67,7 +67,8 @@ REDIS_USERS_PORT=6379
 REDIS_USERS_PASSWORD=redispass4
 REDIS_CACHE_HOST=redis-cache-{i}
 REDIS_CACHE_PORT=6379
-REDIS_CACHE_PASSWORD=redispass4"""
+REDIS_CACHE_PASSWORD=redispass4
+POSTGRES_CACHE=postgres-cache-{i}"""
     env_path.write_text(content.strip())
     print(f"✅ Wrote {env_path} with label {label}")
 
@@ -106,13 +107,16 @@ def generate_service_block(i):
           - redis-users
 
   postgres-cache-{i}:
-    image: docker.io/library/postgres:16
+    image: docker.io/library/postgres:17
     command:
       - postgres
       - -c
       - config_file=/etc/postgresql/postgresql.conf
     restart: unless-stopped
     environment:
+      - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
+      - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - augur{i}_db_data:/var/lib/postgresql/data
@@ -124,9 +128,7 @@ def generate_service_block(i):
       timeout: 5s
       retries: 5
     networks:
-      {network}:
-        aliases:
-          - postgres-cache
+      - {network}
 
   db-init-{i}:
     build:
@@ -230,4 +232,3 @@ Path("docker-compose.yml").write_text("# Auto-generated docker-compose.yml\n" + 
 ))
 
 print(f"✅ docker-compose.yml generated successfully for {instances} instances.")
-
