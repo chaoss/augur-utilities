@@ -115,7 +115,7 @@ def generate_service_block(instance_id):
       context: {augur_path}
       dockerfile: docker/Dockerfile
     ports:
-      - "{http_port}:5000"
+      - "{http_port}:8080"
     env_file:
       - envs/instance{instance_id}.env
     depends_on:
