@@ -51,6 +51,7 @@ def generate_env_file(i):
     label = labels[i - 1]
 
     content = f"""POSTGRES_DB=augur
+POSTGRES_USER=augur
 POSTGRES_PASSWORD=augur
 REDIS_PASSWORD=redispass{i}
 AUGUR_PORT={7000 + i}
@@ -114,6 +115,7 @@ def generate_service_block(i):
     restart: unless-stopped
     environment:
       - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:

@@ -40,7 +40,6 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_DB=augur
-      - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
@@ -172,7 +171,6 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_DB=augur
-      - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
@@ -304,7 +302,6 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_DB=augur
-      - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
@@ -436,7 +433,6 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_DB=augur
-      - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
@@ -568,7 +564,6 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_DB=augur
-      - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
@@ -700,7 +695,6 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_DB=augur
-      - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
@@ -832,7 +826,6 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_DB=augur
-      - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
@@ -964,7 +957,6 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_DB=augur
-      - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
