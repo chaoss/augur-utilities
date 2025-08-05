@@ -11,6 +11,20 @@ force = "--force" in sys.argv
 
 os.makedirs("envs", exist_ok=True)
 
+# --- Load secret password from .secrets.env ---
+secrets_path = Path(".secrets.env")
+if secrets_path.exists():
+    with open(secrets_path) as sf:
+        for line in sf:
+            if line.startswith("AUGUR_PASSWORD="):
+                augur_password = line.strip().split("=", 1)[1]
+                break
+    else:
+        augur_password = "augur"
+else:
+    print("⚠️  .secrets.env not found. Using default 'augur' password.")
+    augur_password = "augur"
+
 # --- Load Labels ---
 labels_file = Path("labels.txt")
 if labels_file.exists():
