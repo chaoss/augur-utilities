@@ -177,7 +177,7 @@ def generate_env_file(instance_id):
     content = f"""# Environment for 8Knot instance {instance_id}
 AUGUR_DATABASE=augur
 AUGUR_HOST=192.168.1.126
-AUGUR_PASSWORD=augur
+AUGUR_PASSWORD={augur_password}
 AUGUR_PORT={7000 + instance_id}
 AUGUR_SCHEMA=augur_data
 AUGUR_USERNAME=augur
