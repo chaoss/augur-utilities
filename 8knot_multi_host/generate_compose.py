@@ -121,9 +121,6 @@ def generate_service_block(i):
       - ./postgres/augur{i}/pg_hba.conf:/etc/postgresql/pg_hba.conf
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U augur"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     networks:
       {network}:
         aliases:
@@ -158,10 +155,8 @@ def generate_service_block(i):
       - -A
       - app:celery_app
       - worker
-      - --loglevel=INFO
+      - --loglevel=DEBUG
       - --concurrency=1
-      - --time-limit=300
-      - --soft-time-limit=240
     depends_on:
       - postgres-cache-{i}
       - redis-cache-{i}
@@ -188,8 +183,6 @@ def generate_service_block(i):
       - -Q
       - data
       - --concurrency=1
-      - --time-limit=600
-      - --soft-time-limit=540
     depends_on:
       - postgres-cache-{i}
       - redis-cache-{i}
@@ -216,10 +209,6 @@ def generate_service_block(i):
       - "1"
       - --threads
       - "2"
-      - --timeout
-      - "300"
-      - --keep-alive
-      - "5"
     ports:
       - "{port}:8080"
     env_file:

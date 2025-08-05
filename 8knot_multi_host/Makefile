@@ -24,7 +24,6 @@ up:
 	@echo "🚀 Currently running instance containers:"
 	@podman ps --format '{{.Names}}' | grep -E '^instance[0-9]+$$' || echo "  None running."
 	@echo "⬆️  Bringing up all instances..."
-	podman-compose down --remove-orphans && podman container prune -f && sudo systemctl reset-failed && sudo find /run/systemd/transient /etc/systemd/system -name 'podman-*.timer' -delete
 	$(COMPOSE) up -d
 
 up-one:
