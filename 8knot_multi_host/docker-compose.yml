@@ -34,7 +34,7 @@ services:
           - redis-users
 
   postgres-cache-1:
-    image: docker.io/library/postgres:17
+    image: docker.io/library/postgres:16
     command:
       - postgres
       - -c
@@ -133,11 +133,39 @@ services:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
+    command:
+      - gunicorn
+      - --reload
+      - --bind
+      - :8080
+      - app:server
+      - --workers
+      - "1"
+      - --threads
+      - "2"
+      - --timeout
+      - "300"
+      - --keep-alive
+      - "5"
     ports:
       - "8081:8080"
     env_file:
       - envs/instance1.env
+    environment:
+      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
+      worker-callback-1:
+        condition: service_started
+      worker-query-1:
+        condition: service_started
+      redis-cache-1:
+        condition: service_started
+      redis-users-1:
+        condition: service_started
+      postgres-cache-1:
+        condition: service_healthy
       db-init-1:
         condition: service_completed_successfully
     restart: unless-stopped
@@ -178,7 +206,7 @@ services:
           - redis-users
 
   postgres-cache-2:
-    image: docker.io/library/postgres:17
+    image: docker.io/library/postgres:16
     command:
       - postgres
       - -c
@@ -277,11 +305,39 @@ services:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
+    command:
+      - gunicorn
+      - --reload
+      - --bind
+      - :8080
+      - app:server
+      - --workers
+      - "1"
+      - --threads
+      - "2"
+      - --timeout
+      - "300"
+      - --keep-alive
+      - "5"
     ports:
       - "8082:8080"
     env_file:
       - envs/instance2.env
+    environment:
+      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
+      worker-callback-2:
+        condition: service_started
+      worker-query-2:
+        condition: service_started
+      redis-cache-2:
+        condition: service_started
+      redis-users-2:
+        condition: service_started
+      postgres-cache-2:
+        condition: service_healthy
       db-init-2:
         condition: service_completed_successfully
     restart: unless-stopped
@@ -322,7 +378,7 @@ services:
           - redis-users
 
   postgres-cache-3:
-    image: docker.io/library/postgres:17
+    image: docker.io/library/postgres:16
     command:
       - postgres
       - -c
@@ -421,11 +477,39 @@ services:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
+    command:
+      - gunicorn
+      - --reload
+      - --bind
+      - :8080
+      - app:server
+      - --workers
+      - "1"
+      - --threads
+      - "2"
+      - --timeout
+      - "300"
+      - --keep-alive
+      - "5"
     ports:
       - "8083:8080"
     env_file:
       - envs/instance3.env
+    environment:
+      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
+      worker-callback-3:
+        condition: service_started
+      worker-query-3:
+        condition: service_started
+      redis-cache-3:
+        condition: service_started
+      redis-users-3:
+        condition: service_started
+      postgres-cache-3:
+        condition: service_healthy
       db-init-3:
         condition: service_completed_successfully
     restart: unless-stopped
@@ -466,7 +550,7 @@ services:
           - redis-users
 
   postgres-cache-4:
-    image: docker.io/library/postgres:17
+    image: docker.io/library/postgres:16
     command:
       - postgres
       - -c
@@ -565,11 +649,39 @@ services:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
+    command:
+      - gunicorn
+      - --reload
+      - --bind
+      - :8080
+      - app:server
+      - --workers
+      - "1"
+      - --threads
+      - "2"
+      - --timeout
+      - "300"
+      - --keep-alive
+      - "5"
     ports:
       - "8084:8080"
     env_file:
       - envs/instance4.env
+    environment:
+      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
+      worker-callback-4:
+        condition: service_started
+      worker-query-4:
+        condition: service_started
+      redis-cache-4:
+        condition: service_started
+      redis-users-4:
+        condition: service_started
+      postgres-cache-4:
+        condition: service_healthy
       db-init-4:
         condition: service_completed_successfully
     restart: unless-stopped
@@ -610,7 +722,7 @@ services:
           - redis-users
 
   postgres-cache-5:
-    image: docker.io/library/postgres:17
+    image: docker.io/library/postgres:16
     command:
       - postgres
       - -c
@@ -709,11 +821,39 @@ services:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
+    command:
+      - gunicorn
+      - --reload
+      - --bind
+      - :8080
+      - app:server
+      - --workers
+      - "1"
+      - --threads
+      - "2"
+      - --timeout
+      - "300"
+      - --keep-alive
+      - "5"
     ports:
       - "8085:8080"
     env_file:
       - envs/instance5.env
+    environment:
+      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
+      worker-callback-5:
+        condition: service_started
+      worker-query-5:
+        condition: service_started
+      redis-cache-5:
+        condition: service_started
+      redis-users-5:
+        condition: service_started
+      postgres-cache-5:
+        condition: service_healthy
       db-init-5:
         condition: service_completed_successfully
     restart: unless-stopped
@@ -754,7 +894,7 @@ services:
           - redis-users
 
   postgres-cache-6:
-    image: docker.io/library/postgres:17
+    image: docker.io/library/postgres:16
     command:
       - postgres
       - -c
@@ -853,11 +993,39 @@ services:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
+    command:
+      - gunicorn
+      - --reload
+      - --bind
+      - :8080
+      - app:server
+      - --workers
+      - "1"
+      - --threads
+      - "2"
+      - --timeout
+      - "300"
+      - --keep-alive
+      - "5"
     ports:
       - "8086:8080"
     env_file:
       - envs/instance6.env
+    environment:
+      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
+      worker-callback-6:
+        condition: service_started
+      worker-query-6:
+        condition: service_started
+      redis-cache-6:
+        condition: service_started
+      redis-users-6:
+        condition: service_started
+      postgres-cache-6:
+        condition: service_healthy
       db-init-6:
         condition: service_completed_successfully
     restart: unless-stopped
@@ -898,7 +1066,7 @@ services:
           - redis-users
 
   postgres-cache-7:
-    image: docker.io/library/postgres:17
+    image: docker.io/library/postgres:16
     command:
       - postgres
       - -c
@@ -997,11 +1165,39 @@ services:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
+    command:
+      - gunicorn
+      - --reload
+      - --bind
+      - :8080
+      - app:server
+      - --workers
+      - "1"
+      - --threads
+      - "2"
+      - --timeout
+      - "300"
+      - --keep-alive
+      - "5"
     ports:
       - "8087:8080"
     env_file:
       - envs/instance7.env
+    environment:
+      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
+      worker-callback-7:
+        condition: service_started
+      worker-query-7:
+        condition: service_started
+      redis-cache-7:
+        condition: service_started
+      redis-users-7:
+        condition: service_started
+      postgres-cache-7:
+        condition: service_healthy
       db-init-7:
         condition: service_completed_successfully
     restart: unless-stopped
@@ -1042,7 +1238,7 @@ services:
           - redis-users
 
   postgres-cache-8:
-    image: docker.io/library/postgres:17
+    image: docker.io/library/postgres:16
     command:
       - postgres
       - -c
@@ -1141,11 +1337,39 @@ services:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
+    command:
+      - gunicorn
+      - --reload
+      - --bind
+      - :8080
+      - app:server
+      - --workers
+      - "1"
+      - --threads
+      - "2"
+      - --timeout
+      - "300"
+      - --keep-alive
+      - "5"
     ports:
       - "8088:8080"
     env_file:
       - envs/instance8.env
+    environment:
+      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
+      worker-callback-8:
+        condition: service_started
+      worker-query-8:
+        condition: service_started
+      redis-cache-8:
+        condition: service_started
+      redis-users-8:
+        condition: service_started
+      postgres-cache-8:
+        condition: service_healthy
       db-init-8:
         condition: service_completed_successfully
     restart: unless-stopped
