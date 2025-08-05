@@ -39,8 +39,6 @@ services:
       - config_file=/etc/postgresql/postgresql.conf
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=augur
-      - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - augur1_db_data:/var/lib/postgresql/data
@@ -170,8 +168,6 @@ services:
       - config_file=/etc/postgresql/postgresql.conf
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=augur
-      - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - augur2_db_data:/var/lib/postgresql/data
@@ -301,8 +297,6 @@ services:
       - config_file=/etc/postgresql/postgresql.conf
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=augur
-      - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - augur3_db_data:/var/lib/postgresql/data
@@ -432,8 +426,6 @@ services:
       - config_file=/etc/postgresql/postgresql.conf
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=augur
-      - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - augur4_db_data:/var/lib/postgresql/data
@@ -563,8 +555,6 @@ services:
       - config_file=/etc/postgresql/postgresql.conf
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=augur
-      - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - augur5_db_data:/var/lib/postgresql/data
@@ -694,8 +684,6 @@ services:
       - config_file=/etc/postgresql/postgresql.conf
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=augur
-      - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - augur6_db_data:/var/lib/postgresql/data
@@ -825,8 +813,6 @@ services:
       - config_file=/etc/postgresql/postgresql.conf
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=augur
-      - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - augur7_db_data:/var/lib/postgresql/data
@@ -956,8 +942,6 @@ services:
       - config_file=/etc/postgresql/postgresql.conf
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=augur
-      - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - augur8_db_data:/var/lib/postgresql/data
