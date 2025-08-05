@@ -128,9 +128,7 @@ def generate_service_block(i):
       timeout: 5s
       retries: 5
     networks:
-      {network}:
-        aliases:
-          - postgres-cache
+      - {network}
 
   db-init-{i}:
     build:
