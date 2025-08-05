@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run with: ./snapshot_pg_volumes.sh
+# Usage: ./snapshot_pg_volumes.sh
 
 set -euo pipefail
 
@@ -11,18 +11,27 @@ echo "🔐 Creating PostgreSQL volume snapshots..."
 echo "📁 Backup directory: $BACKUP_DIR"
 echo
 
-for i in $(seq 1 8); do
-  CONTAINER="augur_multi_host_augur${i}-db_1"
+# Find all containers with "db" in the name
+CONTAINERS=$(podman ps -a --format "{{.Names}}" | grep db || true)
 
-  if podman ps -a --format "{{.Names}}" | grep -q "^$CONTAINER$"; then
-    echo "📦 Dumping database from container: $CONTAINER"
-    OUTPUT_FILE="$BACKUP_DIR/augur${i}_dump_${TIMESTAMP}.sql"
-    podman exec "$CONTAINER" pg_dumpall -U augur > "$OUTPUT_FILE"
-    echo "✅ Saved: $OUTPUT_FILE"
+if [[ -z "$CONTAINERS" ]]; then
+  echo "❌ No database containers found."
+  exit 1
+fi
+
+for CONTAINER in $CONTAINERS; do
+  echo "📦 Dumping database from: $CONTAINER"
+
+  # Extract instance label, e.g., augur1, augur2
+  INSTANCE=$(echo "$CONTAINER" | grep -o 'augur[0-9]\+' || echo "$CONTAINER")
+  OUTPUT_FILE="$BACKUP_DIR/${INSTANCE}_dump_${TIMESTAMP}.sql.gz"
+
+  if podman exec "$CONTAINER" pg_dumpall -U augur | gzip > "$OUTPUT_FILE"; then
+    echo "✅ Compressed and saved: $OUTPUT_FILE"
   else
-    echo "⚠️  Skipping augur${i}: container not found"
+    echo "❌ Failed to dump: $CONTAINER"
   fi
 done
 
 echo
-echo "🎉 All available databases have been backed up."
+echo "🎉 All detected database containers have been backed up (gzipped)."
