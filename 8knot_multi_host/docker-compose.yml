@@ -15,6 +15,7 @@ services:
     networks:
       knot1:
         aliases:
+          - redis-cache-1
           - redis-cache
 
   redis-users-1:
@@ -29,6 +30,7 @@ services:
     networks:
       knot1:
         aliases:
+          - redis-users-1
           - redis-users
 
   postgres-cache-1:
@@ -52,6 +54,7 @@ services:
     networks:
       knot1:
         aliases:
+          - postgres-cache-1
           - postgres-cache
 
   db-init-1:
@@ -68,7 +71,10 @@ services:
       - envs/instance1.env
     restart: on-failure:1000
     networks:
-      - knot1
+      knot1:
+        aliases:
+          - db-init-1
+          - db-init
 
   worker-callback-1:
     build:
@@ -91,7 +97,10 @@ services:
       - envs/instance1.env
     restart: always
     networks:
-      - knot1
+      knot1:
+        aliases:
+          - worker-callback-1
+          - worker-callback
 
   worker-query-1:
     build:
@@ -115,7 +124,10 @@ services:
       - envs/instance1.env
     restart: always
     networks:
-      - knot1
+      knot1:
+        aliases:
+          - worker-query-1
+          - worker-query
 
   instance1:
     build:
@@ -130,7 +142,10 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      - knot1
+      knot1:
+        aliases:
+          - instance1
+          - instance
 
   redis-cache-2:
     image: docker.io/library/redis:6
@@ -144,6 +159,7 @@ services:
     networks:
       knot2:
         aliases:
+          - redis-cache-2
           - redis-cache
 
   redis-users-2:
@@ -158,6 +174,7 @@ services:
     networks:
       knot2:
         aliases:
+          - redis-users-2
           - redis-users
 
   postgres-cache-2:
@@ -181,6 +198,7 @@ services:
     networks:
       knot2:
         aliases:
+          - postgres-cache-2
           - postgres-cache
 
   db-init-2:
@@ -197,7 +215,10 @@ services:
       - envs/instance2.env
     restart: on-failure:1000
     networks:
-      - knot2
+      knot2:
+        aliases:
+          - db-init-2
+          - db-init
 
   worker-callback-2:
     build:
@@ -220,7 +241,10 @@ services:
       - envs/instance2.env
     restart: always
     networks:
-      - knot2
+      knot2:
+        aliases:
+          - worker-callback-2
+          - worker-callback
 
   worker-query-2:
     build:
@@ -244,7 +268,10 @@ services:
       - envs/instance2.env
     restart: always
     networks:
-      - knot2
+      knot2:
+        aliases:
+          - worker-query-2
+          - worker-query
 
   instance2:
     build:
@@ -259,7 +286,10 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      - knot2
+      knot2:
+        aliases:
+          - instance2
+          - instance
 
   redis-cache-3:
     image: docker.io/library/redis:6
@@ -273,6 +303,7 @@ services:
     networks:
       knot3:
         aliases:
+          - redis-cache-3
           - redis-cache
 
   redis-users-3:
@@ -287,6 +318,7 @@ services:
     networks:
       knot3:
         aliases:
+          - redis-users-3
           - redis-users
 
   postgres-cache-3:
@@ -310,6 +342,7 @@ services:
     networks:
       knot3:
         aliases:
+          - postgres-cache-3
           - postgres-cache
 
   db-init-3:
@@ -326,7 +359,10 @@ services:
       - envs/instance3.env
     restart: on-failure:1000
     networks:
-      - knot3
+      knot3:
+        aliases:
+          - db-init-3
+          - db-init
 
   worker-callback-3:
     build:
@@ -349,7 +385,10 @@ services:
       - envs/instance3.env
     restart: always
     networks:
-      - knot3
+      knot3:
+        aliases:
+          - worker-callback-3
+          - worker-callback
 
   worker-query-3:
     build:
@@ -373,7 +412,10 @@ services:
       - envs/instance3.env
     restart: always
     networks:
-      - knot3
+      knot3:
+        aliases:
+          - worker-query-3
+          - worker-query
 
   instance3:
     build:
@@ -388,7 +430,10 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      - knot3
+      knot3:
+        aliases:
+          - instance3
+          - instance
 
   redis-cache-4:
     image: docker.io/library/redis:6
@@ -402,6 +447,7 @@ services:
     networks:
       knot4:
         aliases:
+          - redis-cache-4
           - redis-cache
 
   redis-users-4:
@@ -416,6 +462,7 @@ services:
     networks:
       knot4:
         aliases:
+          - redis-users-4
           - redis-users
 
   postgres-cache-4:
@@ -439,6 +486,7 @@ services:
     networks:
       knot4:
         aliases:
+          - postgres-cache-4
           - postgres-cache
 
   db-init-4:
@@ -455,7 +503,10 @@ services:
       - envs/instance4.env
     restart: on-failure:1000
     networks:
-      - knot4
+      knot4:
+        aliases:
+          - db-init-4
+          - db-init
 
   worker-callback-4:
     build:
@@ -478,7 +529,10 @@ services:
       - envs/instance4.env
     restart: always
     networks:
-      - knot4
+      knot4:
+        aliases:
+          - worker-callback-4
+          - worker-callback
 
   worker-query-4:
     build:
@@ -502,7 +556,10 @@ services:
       - envs/instance4.env
     restart: always
     networks:
-      - knot4
+      knot4:
+        aliases:
+          - worker-query-4
+          - worker-query
 
   instance4:
     build:
@@ -517,7 +574,10 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      - knot4
+      knot4:
+        aliases:
+          - instance4
+          - instance
 
   redis-cache-5:
     image: docker.io/library/redis:6
@@ -531,6 +591,7 @@ services:
     networks:
       knot5:
         aliases:
+          - redis-cache-5
           - redis-cache
 
   redis-users-5:
@@ -545,6 +606,7 @@ services:
     networks:
       knot5:
         aliases:
+          - redis-users-5
           - redis-users
 
   postgres-cache-5:
@@ -568,6 +630,7 @@ services:
     networks:
       knot5:
         aliases:
+          - postgres-cache-5
           - postgres-cache
 
   db-init-5:
@@ -584,7 +647,10 @@ services:
       - envs/instance5.env
     restart: on-failure:1000
     networks:
-      - knot5
+      knot5:
+        aliases:
+          - db-init-5
+          - db-init
 
   worker-callback-5:
     build:
@@ -607,7 +673,10 @@ services:
       - envs/instance5.env
     restart: always
     networks:
-      - knot5
+      knot5:
+        aliases:
+          - worker-callback-5
+          - worker-callback
 
   worker-query-5:
     build:
@@ -631,7 +700,10 @@ services:
       - envs/instance5.env
     restart: always
     networks:
-      - knot5
+      knot5:
+        aliases:
+          - worker-query-5
+          - worker-query
 
   instance5:
     build:
@@ -646,7 +718,10 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      - knot5
+      knot5:
+        aliases:
+          - instance5
+          - instance
 
   redis-cache-6:
     image: docker.io/library/redis:6
@@ -660,6 +735,7 @@ services:
     networks:
       knot6:
         aliases:
+          - redis-cache-6
           - redis-cache
 
   redis-users-6:
@@ -674,6 +750,7 @@ services:
     networks:
       knot6:
         aliases:
+          - redis-users-6
           - redis-users
 
   postgres-cache-6:
@@ -697,6 +774,7 @@ services:
     networks:
       knot6:
         aliases:
+          - postgres-cache-6
           - postgres-cache
 
   db-init-6:
@@ -713,7 +791,10 @@ services:
       - envs/instance6.env
     restart: on-failure:1000
     networks:
-      - knot6
+      knot6:
+        aliases:
+          - db-init-6
+          - db-init
 
   worker-callback-6:
     build:
@@ -736,7 +817,10 @@ services:
       - envs/instance6.env
     restart: always
     networks:
-      - knot6
+      knot6:
+        aliases:
+          - worker-callback-6
+          - worker-callback
 
   worker-query-6:
     build:
@@ -760,7 +844,10 @@ services:
       - envs/instance6.env
     restart: always
     networks:
-      - knot6
+      knot6:
+        aliases:
+          - worker-query-6
+          - worker-query
 
   instance6:
     build:
@@ -775,7 +862,10 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      - knot6
+      knot6:
+        aliases:
+          - instance6
+          - instance
 
   redis-cache-7:
     image: docker.io/library/redis:6
@@ -789,6 +879,7 @@ services:
     networks:
       knot7:
         aliases:
+          - redis-cache-7
           - redis-cache
 
   redis-users-7:
@@ -803,6 +894,7 @@ services:
     networks:
       knot7:
         aliases:
+          - redis-users-7
           - redis-users
 
   postgres-cache-7:
@@ -826,6 +918,7 @@ services:
     networks:
       knot7:
         aliases:
+          - postgres-cache-7
           - postgres-cache
 
   db-init-7:
@@ -842,7 +935,10 @@ services:
       - envs/instance7.env
     restart: on-failure:1000
     networks:
-      - knot7
+      knot7:
+        aliases:
+          - db-init-7
+          - db-init
 
   worker-callback-7:
     build:
@@ -865,7 +961,10 @@ services:
       - envs/instance7.env
     restart: always
     networks:
-      - knot7
+      knot7:
+        aliases:
+          - worker-callback-7
+          - worker-callback
 
   worker-query-7:
     build:
@@ -889,7 +988,10 @@ services:
       - envs/instance7.env
     restart: always
     networks:
-      - knot7
+      knot7:
+        aliases:
+          - worker-query-7
+          - worker-query
 
   instance7:
     build:
@@ -904,7 +1006,10 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      - knot7
+      knot7:
+        aliases:
+          - instance7
+          - instance
 
   redis-cache-8:
     image: docker.io/library/redis:6
@@ -918,6 +1023,7 @@ services:
     networks:
       knot8:
         aliases:
+          - redis-cache-8
           - redis-cache
 
   redis-users-8:
@@ -932,6 +1038,7 @@ services:
     networks:
       knot8:
         aliases:
+          - redis-users-8
           - redis-users
 
   postgres-cache-8:
@@ -955,6 +1062,7 @@ services:
     networks:
       knot8:
         aliases:
+          - postgres-cache-8
           - postgres-cache
 
   db-init-8:
@@ -971,7 +1079,10 @@ services:
       - envs/instance8.env
     restart: on-failure:1000
     networks:
-      - knot8
+      knot8:
+        aliases:
+          - db-init-8
+          - db-init
 
   worker-callback-8:
     build:
@@ -994,7 +1105,10 @@ services:
       - envs/instance8.env
     restart: always
     networks:
-      - knot8
+      knot8:
+        aliases:
+          - worker-callback-8
+          - worker-callback
 
   worker-query-8:
     build:
@@ -1018,7 +1132,10 @@ services:
       - envs/instance8.env
     restart: always
     networks:
-      - knot8
+      knot8:
+        aliases:
+          - worker-query-8
+          - worker-query
 
   instance8:
     build:
@@ -1033,7 +1150,10 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      - knot8
+      knot8:
+        aliases:
+          - instance8
+          - instance
 
 
 volumes:
