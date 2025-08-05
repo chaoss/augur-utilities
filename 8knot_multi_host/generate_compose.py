@@ -19,6 +19,7 @@ networks:
 {networks}
 """
 
+
 postgres_conf_template = """listen_addresses = '*'
 max_connections = 1000
 shared_buffers = 1GB
@@ -47,6 +48,7 @@ def generate_env_file(i):
     if env_path.exists() and not force:
         print(f"Skipping {env_path}")
         return
+
 
     label = labels[i - 1]
 
@@ -228,3 +230,4 @@ Path("docker-compose.yml").write_text("# Auto-generated docker-compose.yml\n" + 
 ))
 
 print(f"✅ docker-compose.yml generated successfully for {instances} instances.")
+

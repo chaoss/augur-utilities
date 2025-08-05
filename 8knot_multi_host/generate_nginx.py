@@ -16,6 +16,9 @@ nginx_conf = []
 for i in range(1, INSTANCES + 1):
     label = labels[i - 1].lower().replace(" ", "")
     port = 8090 + i
+    # Use label if available, otherwise fallback
+    label = labels[i - 1] if i - 1 < len(labels) else f"instance{i}"
+
     server = f"""
 server {{
     listen 80;

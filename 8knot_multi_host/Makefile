@@ -58,7 +58,9 @@ stop-all:
 	@echo "🛑 Stopping all running containers..."
 	-podman stop $$(podman ps -q)
 
+# Force remove containers and networks for instances
 nuke:
 	@echo "💣 Nuking all containers and networks matching pattern..."
 	-podman ps -a --format "{{.ID}} {{.Names}}" | grep instance || true | awk '{print $$1}' | xargs podman rm -f
 	-podman network ls --format "{{.Name}}" | grep knot | xargs podman network rm
+

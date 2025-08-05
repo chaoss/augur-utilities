@@ -1,6 +1,10 @@
 # Operating Your Multi-Container Setup Once Deployed: 
 **NOTE**: For information about interacting with the containers once they are started, including Augur and the databases, see [RUNNING.md](./RUNNING.md)
 
+There is a refined version of many of these instructions at (HERE)[./augur_deploy_cheatsheet.md]
+
+This is the [make helpfile.(./MAKEFILE_HELP.md)
+
 # Multi-Instance Augur Deployment (8 instances)
 
 This setup runs 8 fully isolated Augur instances using Podman and Nginx with automatic Let's Encrypt certificates.
@@ -43,9 +47,32 @@ COMPOSE = podman-compose
    ```
 
 4. **Generate configs**
+
+   Cleaning up Podman: 
+
+   ```bash
+      podman system prune -af
+      podman volume prune
+   ```
+
    ```bash
    make regen
    make nginx
+   ```
+
+   Initial Build: 
+
+   ```bash
+   make regen    # always regenerate compose + config first
+   make build    # only needed if base image or Dockerfile changed
+   make up       # starts all services
+   ```
+
+   Subsequent Starts: 
+
+   ```bash
+   make regen
+   make up 
    ```
 
    There are parameters available for specifying the location of your Augur clone as well. This will allow you to use this code as an "orchestration directory" that pulls in code from Augur. 
