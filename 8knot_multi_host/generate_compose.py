@@ -56,6 +56,16 @@ AUGUR_PASSWORD=augur
 AUGUR_HOST=192.168.1.126
 AUGUR_SCHEMA=augur_data
 AUGUR_LOGIN_ENABLED=False
+
+EDIS_USERS_HOST=redis-users-{i}
+REDIS_USERS_PORT=6379
+REDIS_USERS_PASSWORD=redispass4
+
+REDIS_CACHE_HOST=redis-cache-{i}
+REDIS_CACHE_PORT=6379
+REDIS_CACHE_PASSWORD=redispass4
+
+POSTGRES_CACHE=postgres-cache-{i}
 """
     env_path.write_text(env_content.strip())
     print(f"✅ Created/updated {env_path}")
@@ -95,7 +105,7 @@ def generate_service_block(instance_id):
     networks:
       - {network}
 
-  augur_multi_host_{instance_id}-db_1:
+  postgres-cache-{instance_id}:
     image: docker.io/library/postgres:17
     restart: unless-stopped
     environment:
@@ -119,7 +129,7 @@ def generate_service_block(instance_id):
     env_file:
       - envs/instance{instance_id}.env
     depends_on:
-      - augur_multi_host_{instance_id}-db_1
+      - postgres-cache-{instance_id}
       - redis-cache-{instance_id}
       - redis-users-{instance_id}
     restart: unless-stopped
