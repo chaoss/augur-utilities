@@ -27,7 +27,7 @@ services:
     networks:
       - knot1
 
-  augur_multi_host_1-db_1:
+  postgres-cache-1:
     image: docker.io/library/postgres:17
     restart: unless-stopped
     environment:
@@ -47,11 +47,11 @@ services:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     ports:
-      - "8081:5000"
+      - "8081:8080"
     env_file:
       - envs/instance1.env
     depends_on:
-      - augur_multi_host_1-db_1
+      - postgres-cache-1
       - redis-cache-1
       - redis-users-1
     restart: unless-stopped
@@ -82,7 +82,7 @@ services:
     networks:
       - knot2
 
-  augur_multi_host_2-db_1:
+  postgres-cache-2:
     image: docker.io/library/postgres:17
     restart: unless-stopped
     environment:
@@ -102,11 +102,11 @@ services:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     ports:
-      - "8082:5000"
+      - "8082:8080"
     env_file:
       - envs/instance2.env
     depends_on:
-      - augur_multi_host_2-db_1
+      - postgres-cache-2
       - redis-cache-2
       - redis-users-2
     restart: unless-stopped
@@ -137,7 +137,7 @@ services:
     networks:
       - knot3
 
-  augur_multi_host_3-db_1:
+  postgres-cache-3:
     image: docker.io/library/postgres:17
     restart: unless-stopped
     environment:
@@ -157,11 +157,11 @@ services:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     ports:
-      - "8083:5000"
+      - "8083:8080"
     env_file:
       - envs/instance3.env
     depends_on:
-      - augur_multi_host_3-db_1
+      - postgres-cache-3
       - redis-cache-3
       - redis-users-3
     restart: unless-stopped
@@ -192,7 +192,7 @@ services:
     networks:
       - knot4
 
-  augur_multi_host_4-db_1:
+  postgres-cache-4:
     image: docker.io/library/postgres:17
     restart: unless-stopped
     environment:
@@ -212,11 +212,11 @@ services:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     ports:
-      - "8084:5000"
+      - "8084:8080"
     env_file:
       - envs/instance4.env
     depends_on:
-      - augur_multi_host_4-db_1
+      - postgres-cache-4
       - redis-cache-4
       - redis-users-4
     restart: unless-stopped
@@ -247,7 +247,7 @@ services:
     networks:
       - knot5
 
-  augur_multi_host_5-db_1:
+  postgres-cache-5:
     image: docker.io/library/postgres:17
     restart: unless-stopped
     environment:
@@ -267,11 +267,11 @@ services:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     ports:
-      - "8085:5000"
+      - "8085:8080"
     env_file:
       - envs/instance5.env
     depends_on:
-      - augur_multi_host_5-db_1
+      - postgres-cache-5
       - redis-cache-5
       - redis-users-5
     restart: unless-stopped
@@ -302,7 +302,7 @@ services:
     networks:
       - knot6
 
-  augur_multi_host_6-db_1:
+  postgres-cache-6:
     image: docker.io/library/postgres:17
     restart: unless-stopped
     environment:
@@ -322,11 +322,11 @@ services:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     ports:
-      - "8086:5000"
+      - "8086:8080"
     env_file:
       - envs/instance6.env
     depends_on:
-      - augur_multi_host_6-db_1
+      - postgres-cache-6
       - redis-cache-6
       - redis-users-6
     restart: unless-stopped
@@ -357,7 +357,7 @@ services:
     networks:
       - knot7
 
-  augur_multi_host_7-db_1:
+  postgres-cache-7:
     image: docker.io/library/postgres:17
     restart: unless-stopped
     environment:
@@ -377,11 +377,11 @@ services:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     ports:
-      - "8087:5000"
+      - "8087:8080"
     env_file:
       - envs/instance7.env
     depends_on:
-      - augur_multi_host_7-db_1
+      - postgres-cache-7
       - redis-cache-7
       - redis-users-7
     restart: unless-stopped
@@ -412,7 +412,7 @@ services:
     networks:
       - knot8
 
-  augur_multi_host_8-db_1:
+  postgres-cache-8:
     image: docker.io/library/postgres:17
     restart: unless-stopped
     environment:
@@ -432,11 +432,11 @@ services:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
     ports:
-      - "8088:5000"
+      - "8088:8080"
     env_file:
       - envs/instance8.env
     depends_on:
-      - augur_multi_host_8-db_1
+      - postgres-cache-8
       - redis-cache-8
       - redis-users-8
     restart: unless-stopped
