@@ -4,6 +4,8 @@ from pathlib import Path
 
 # --- Config ---
 instances = 8
+#future 
+#instances = len(get_labels())  # instead of fixed 8
 augur_path = sys.argv[1] if len(sys.argv) > 1 else "."
 force = "--force" in sys.argv
 
@@ -43,7 +45,7 @@ def get_labels():
 labels = get_labels()
 
 def generate_env_file(i):
-    env_path = Path(f"envs/instance{i}.env")
+    env_path.write_text(content.strip() + "\n") 
     if env_path.exists() and not force:
         print(f"Skipping {env_path}")
         return
