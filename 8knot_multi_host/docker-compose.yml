@@ -15,7 +15,6 @@ services:
     networks:
       knot1:
         aliases:
-          - redis-cache-1
           - redis-cache
 
   redis-users-1:
@@ -30,7 +29,6 @@ services:
     networks:
       knot1:
         aliases:
-          - redis-users-1
           - redis-users
 
   postgres-cache-1:
@@ -54,7 +52,6 @@ services:
     networks:
       knot1:
         aliases:
-          - postgres-cache-1
           - postgres-cache
 
   db-init-1:
@@ -71,10 +68,7 @@ services:
       - envs/instance1.env
     restart: on-failure:1000
     networks:
-      knot1:
-        aliases:
-          - db-init-1
-          - db-init
+      - knot1
 
   worker-callback-1:
     build:
@@ -97,10 +91,7 @@ services:
       - envs/instance1.env
     restart: always
     networks:
-      knot1:
-        aliases:
-          - worker-callback-1
-          - worker-callback
+      - knot1
 
   worker-query-1:
     build:
@@ -124,56 +115,22 @@ services:
       - envs/instance1.env
     restart: always
     networks:
-      knot1:
-        aliases:
-          - worker-query-1
-          - worker-query
+      - knot1
 
   instance1:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
-    command:
-      - gunicorn
-      - --reload
-      - --bind
-      - :8080
-      - app:server
-      - --workers
-      - "1"
-      - --threads
-      - "2"
-      - --timeout
-      - "300"
-      - --keep-alive
-      - "5"
     ports:
       - "8081:8080"
     env_file:
       - envs/instance1.env
-    environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
-      worker-callback-1:
-        condition: service_started
-      worker-query-1:
-        condition: service_started
-      redis-cache-1:
-        condition: service_started
-      redis-users-1:
-        condition: service_started
-      postgres-cache-1:
-        condition: service_healthy
       db-init-1:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      knot1:
-        aliases:
-          - instance1
-          - instance
+      - knot1
 
   redis-cache-2:
     image: docker.io/library/redis:6
@@ -187,7 +144,6 @@ services:
     networks:
       knot2:
         aliases:
-          - redis-cache-2
           - redis-cache
 
   redis-users-2:
@@ -202,7 +158,6 @@ services:
     networks:
       knot2:
         aliases:
-          - redis-users-2
           - redis-users
 
   postgres-cache-2:
@@ -226,7 +181,6 @@ services:
     networks:
       knot2:
         aliases:
-          - postgres-cache-2
           - postgres-cache
 
   db-init-2:
@@ -243,10 +197,7 @@ services:
       - envs/instance2.env
     restart: on-failure:1000
     networks:
-      knot2:
-        aliases:
-          - db-init-2
-          - db-init
+      - knot2
 
   worker-callback-2:
     build:
@@ -269,10 +220,7 @@ services:
       - envs/instance2.env
     restart: always
     networks:
-      knot2:
-        aliases:
-          - worker-callback-2
-          - worker-callback
+      - knot2
 
   worker-query-2:
     build:
@@ -296,56 +244,22 @@ services:
       - envs/instance2.env
     restart: always
     networks:
-      knot2:
-        aliases:
-          - worker-query-2
-          - worker-query
+      - knot2
 
   instance2:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
-    command:
-      - gunicorn
-      - --reload
-      - --bind
-      - :8080
-      - app:server
-      - --workers
-      - "1"
-      - --threads
-      - "2"
-      - --timeout
-      - "300"
-      - --keep-alive
-      - "5"
     ports:
       - "8082:8080"
     env_file:
       - envs/instance2.env
-    environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
-      worker-callback-2:
-        condition: service_started
-      worker-query-2:
-        condition: service_started
-      redis-cache-2:
-        condition: service_started
-      redis-users-2:
-        condition: service_started
-      postgres-cache-2:
-        condition: service_healthy
       db-init-2:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      knot2:
-        aliases:
-          - instance2
-          - instance
+      - knot2
 
   redis-cache-3:
     image: docker.io/library/redis:6
@@ -359,7 +273,6 @@ services:
     networks:
       knot3:
         aliases:
-          - redis-cache-3
           - redis-cache
 
   redis-users-3:
@@ -374,7 +287,6 @@ services:
     networks:
       knot3:
         aliases:
-          - redis-users-3
           - redis-users
 
   postgres-cache-3:
@@ -398,7 +310,6 @@ services:
     networks:
       knot3:
         aliases:
-          - postgres-cache-3
           - postgres-cache
 
   db-init-3:
@@ -415,10 +326,7 @@ services:
       - envs/instance3.env
     restart: on-failure:1000
     networks:
-      knot3:
-        aliases:
-          - db-init-3
-          - db-init
+      - knot3
 
   worker-callback-3:
     build:
@@ -441,10 +349,7 @@ services:
       - envs/instance3.env
     restart: always
     networks:
-      knot3:
-        aliases:
-          - worker-callback-3
-          - worker-callback
+      - knot3
 
   worker-query-3:
     build:
@@ -468,56 +373,22 @@ services:
       - envs/instance3.env
     restart: always
     networks:
-      knot3:
-        aliases:
-          - worker-query-3
-          - worker-query
+      - knot3
 
   instance3:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
-    command:
-      - gunicorn
-      - --reload
-      - --bind
-      - :8080
-      - app:server
-      - --workers
-      - "1"
-      - --threads
-      - "2"
-      - --timeout
-      - "300"
-      - --keep-alive
-      - "5"
     ports:
       - "8083:8080"
     env_file:
       - envs/instance3.env
-    environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
-      worker-callback-3:
-        condition: service_started
-      worker-query-3:
-        condition: service_started
-      redis-cache-3:
-        condition: service_started
-      redis-users-3:
-        condition: service_started
-      postgres-cache-3:
-        condition: service_healthy
       db-init-3:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      knot3:
-        aliases:
-          - instance3
-          - instance
+      - knot3
 
   redis-cache-4:
     image: docker.io/library/redis:6
@@ -531,7 +402,6 @@ services:
     networks:
       knot4:
         aliases:
-          - redis-cache-4
           - redis-cache
 
   redis-users-4:
@@ -546,7 +416,6 @@ services:
     networks:
       knot4:
         aliases:
-          - redis-users-4
           - redis-users
 
   postgres-cache-4:
@@ -570,7 +439,6 @@ services:
     networks:
       knot4:
         aliases:
-          - postgres-cache-4
           - postgres-cache
 
   db-init-4:
@@ -587,10 +455,7 @@ services:
       - envs/instance4.env
     restart: on-failure:1000
     networks:
-      knot4:
-        aliases:
-          - db-init-4
-          - db-init
+      - knot4
 
   worker-callback-4:
     build:
@@ -613,10 +478,7 @@ services:
       - envs/instance4.env
     restart: always
     networks:
-      knot4:
-        aliases:
-          - worker-callback-4
-          - worker-callback
+      - knot4
 
   worker-query-4:
     build:
@@ -640,56 +502,22 @@ services:
       - envs/instance4.env
     restart: always
     networks:
-      knot4:
-        aliases:
-          - worker-query-4
-          - worker-query
+      - knot4
 
   instance4:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
-    command:
-      - gunicorn
-      - --reload
-      - --bind
-      - :8080
-      - app:server
-      - --workers
-      - "1"
-      - --threads
-      - "2"
-      - --timeout
-      - "300"
-      - --keep-alive
-      - "5"
     ports:
       - "8084:8080"
     env_file:
       - envs/instance4.env
-    environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
-      worker-callback-4:
-        condition: service_started
-      worker-query-4:
-        condition: service_started
-      redis-cache-4:
-        condition: service_started
-      redis-users-4:
-        condition: service_started
-      postgres-cache-4:
-        condition: service_healthy
       db-init-4:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      knot4:
-        aliases:
-          - instance4
-          - instance
+      - knot4
 
   redis-cache-5:
     image: docker.io/library/redis:6
@@ -703,7 +531,6 @@ services:
     networks:
       knot5:
         aliases:
-          - redis-cache-5
           - redis-cache
 
   redis-users-5:
@@ -718,7 +545,6 @@ services:
     networks:
       knot5:
         aliases:
-          - redis-users-5
           - redis-users
 
   postgres-cache-5:
@@ -742,7 +568,6 @@ services:
     networks:
       knot5:
         aliases:
-          - postgres-cache-5
           - postgres-cache
 
   db-init-5:
@@ -759,10 +584,7 @@ services:
       - envs/instance5.env
     restart: on-failure:1000
     networks:
-      knot5:
-        aliases:
-          - db-init-5
-          - db-init
+      - knot5
 
   worker-callback-5:
     build:
@@ -785,10 +607,7 @@ services:
       - envs/instance5.env
     restart: always
     networks:
-      knot5:
-        aliases:
-          - worker-callback-5
-          - worker-callback
+      - knot5
 
   worker-query-5:
     build:
@@ -812,56 +631,22 @@ services:
       - envs/instance5.env
     restart: always
     networks:
-      knot5:
-        aliases:
-          - worker-query-5
-          - worker-query
+      - knot5
 
   instance5:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
-    command:
-      - gunicorn
-      - --reload
-      - --bind
-      - :8080
-      - app:server
-      - --workers
-      - "1"
-      - --threads
-      - "2"
-      - --timeout
-      - "300"
-      - --keep-alive
-      - "5"
     ports:
       - "8085:8080"
     env_file:
       - envs/instance5.env
-    environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
-      worker-callback-5:
-        condition: service_started
-      worker-query-5:
-        condition: service_started
-      redis-cache-5:
-        condition: service_started
-      redis-users-5:
-        condition: service_started
-      postgres-cache-5:
-        condition: service_healthy
       db-init-5:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      knot5:
-        aliases:
-          - instance5
-          - instance
+      - knot5
 
   redis-cache-6:
     image: docker.io/library/redis:6
@@ -875,7 +660,6 @@ services:
     networks:
       knot6:
         aliases:
-          - redis-cache-6
           - redis-cache
 
   redis-users-6:
@@ -890,7 +674,6 @@ services:
     networks:
       knot6:
         aliases:
-          - redis-users-6
           - redis-users
 
   postgres-cache-6:
@@ -914,7 +697,6 @@ services:
     networks:
       knot6:
         aliases:
-          - postgres-cache-6
           - postgres-cache
 
   db-init-6:
@@ -931,10 +713,7 @@ services:
       - envs/instance6.env
     restart: on-failure:1000
     networks:
-      knot6:
-        aliases:
-          - db-init-6
-          - db-init
+      - knot6
 
   worker-callback-6:
     build:
@@ -957,10 +736,7 @@ services:
       - envs/instance6.env
     restart: always
     networks:
-      knot6:
-        aliases:
-          - worker-callback-6
-          - worker-callback
+      - knot6
 
   worker-query-6:
     build:
@@ -984,56 +760,22 @@ services:
       - envs/instance6.env
     restart: always
     networks:
-      knot6:
-        aliases:
-          - worker-query-6
-          - worker-query
+      - knot6
 
   instance6:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
-    command:
-      - gunicorn
-      - --reload
-      - --bind
-      - :8080
-      - app:server
-      - --workers
-      - "1"
-      - --threads
-      - "2"
-      - --timeout
-      - "300"
-      - --keep-alive
-      - "5"
     ports:
       - "8086:8080"
     env_file:
       - envs/instance6.env
-    environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
-      worker-callback-6:
-        condition: service_started
-      worker-query-6:
-        condition: service_started
-      redis-cache-6:
-        condition: service_started
-      redis-users-6:
-        condition: service_started
-      postgres-cache-6:
-        condition: service_healthy
       db-init-6:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      knot6:
-        aliases:
-          - instance6
-          - instance
+      - knot6
 
   redis-cache-7:
     image: docker.io/library/redis:6
@@ -1047,7 +789,6 @@ services:
     networks:
       knot7:
         aliases:
-          - redis-cache-7
           - redis-cache
 
   redis-users-7:
@@ -1062,7 +803,6 @@ services:
     networks:
       knot7:
         aliases:
-          - redis-users-7
           - redis-users
 
   postgres-cache-7:
@@ -1086,7 +826,6 @@ services:
     networks:
       knot7:
         aliases:
-          - postgres-cache-7
           - postgres-cache
 
   db-init-7:
@@ -1103,10 +842,7 @@ services:
       - envs/instance7.env
     restart: on-failure:1000
     networks:
-      knot7:
-        aliases:
-          - db-init-7
-          - db-init
+      - knot7
 
   worker-callback-7:
     build:
@@ -1129,10 +865,7 @@ services:
       - envs/instance7.env
     restart: always
     networks:
-      knot7:
-        aliases:
-          - worker-callback-7
-          - worker-callback
+      - knot7
 
   worker-query-7:
     build:
@@ -1156,56 +889,22 @@ services:
       - envs/instance7.env
     restart: always
     networks:
-      knot7:
-        aliases:
-          - worker-query-7
-          - worker-query
+      - knot7
 
   instance7:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
-    command:
-      - gunicorn
-      - --reload
-      - --bind
-      - :8080
-      - app:server
-      - --workers
-      - "1"
-      - --threads
-      - "2"
-      - --timeout
-      - "300"
-      - --keep-alive
-      - "5"
     ports:
       - "8087:8080"
     env_file:
       - envs/instance7.env
-    environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
-      worker-callback-7:
-        condition: service_started
-      worker-query-7:
-        condition: service_started
-      redis-cache-7:
-        condition: service_started
-      redis-users-7:
-        condition: service_started
-      postgres-cache-7:
-        condition: service_healthy
       db-init-7:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      knot7:
-        aliases:
-          - instance7
-          - instance
+      - knot7
 
   redis-cache-8:
     image: docker.io/library/redis:6
@@ -1219,7 +918,6 @@ services:
     networks:
       knot8:
         aliases:
-          - redis-cache-8
           - redis-cache
 
   redis-users-8:
@@ -1234,7 +932,6 @@ services:
     networks:
       knot8:
         aliases:
-          - redis-users-8
           - redis-users
 
   postgres-cache-8:
@@ -1258,7 +955,6 @@ services:
     networks:
       knot8:
         aliases:
-          - postgres-cache-8
           - postgres-cache
 
   db-init-8:
@@ -1275,10 +971,7 @@ services:
       - envs/instance8.env
     restart: on-failure:1000
     networks:
-      knot8:
-        aliases:
-          - db-init-8
-          - db-init
+      - knot8
 
   worker-callback-8:
     build:
@@ -1301,10 +994,7 @@ services:
       - envs/instance8.env
     restart: always
     networks:
-      knot8:
-        aliases:
-          - worker-callback-8
-          - worker-callback
+      - knot8
 
   worker-query-8:
     build:
@@ -1328,56 +1018,22 @@ services:
       - envs/instance8.env
     restart: always
     networks:
-      knot8:
-        aliases:
-          - worker-query-8
-          - worker-query
+      - knot8
 
   instance8:
     build:
       context: /home/sean/github/8knot
       dockerfile: docker/Dockerfile
-    command:
-      - gunicorn
-      - --reload
-      - --bind
-      - :8080
-      - app:server
-      - --workers
-      - "1"
-      - --threads
-      - "2"
-      - --timeout
-      - "300"
-      - --keep-alive
-      - "5"
     ports:
       - "8088:8080"
     env_file:
       - envs/instance8.env
-    environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
-      worker-callback-8:
-        condition: service_started
-      worker-query-8:
-        condition: service_started
-      redis-cache-8:
-        condition: service_started
-      redis-users-8:
-        condition: service_started
-      postgres-cache-8:
-        condition: service_healthy
       db-init-8:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      knot8:
-        aliases:
-          - instance8
-          - instance
+      - knot8
 
 
 volumes:

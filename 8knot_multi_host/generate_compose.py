@@ -65,8 +65,7 @@ REDIS_USERS_PORT=6379
 REDIS_USERS_PASSWORD=redispass4
 REDIS_CACHE_HOST=redis-cache-{i}
 REDIS_CACHE_PORT=6379
-REDIS_CACHE_PASSWORD=redispass4
-POSTGRES_CACHE=postgres-cache-{i}"""
+REDIS_CACHE_PASSWORD=redispass4"""
     env_path.write_text(content.strip())
     print(f"✅ Wrote {env_path} with label {label}")
 
@@ -88,7 +87,6 @@ def generate_service_block(i):
     networks:
       {network}:
         aliases:
-          - redis-cache-{i}
           - redis-cache
 
   redis-users-{i}:
@@ -103,7 +101,6 @@ def generate_service_block(i):
     networks:
       {network}:
         aliases:
-          - redis-users-{i}
           - redis-users
 
   postgres-cache-{i}:
@@ -121,10 +118,12 @@ def generate_service_block(i):
       - ./postgres/augur{i}/pg_hba.conf:/etc/postgresql/pg_hba.conf
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U augur"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       {network}:
         aliases:
-          - postgres-cache-{i}
           - postgres-cache
 
   db-init-{i}:
@@ -141,10 +140,7 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: on-failure:1000
     networks:
-      {network}:
-        aliases:
-          - db-init-{i}
-          - db-init
+      - {network}
 
   worker-callback-{i}:
     build:
@@ -155,8 +151,10 @@ def generate_service_block(i):
       - -A
       - app:celery_app
       - worker
-      - --loglevel=DEBUG
+      - --loglevel=INFO
       - --concurrency=1
+      - --time-limit=300
+      - --soft-time-limit=240
     depends_on:
       - postgres-cache-{i}
       - redis-cache-{i}
@@ -165,10 +163,7 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: always
     networks:
-      {network}:
-        aliases:
-          - worker-callback-{i}
-          - worker-callback
+      - {network}
 
   worker-query-{i}:
     build:
@@ -183,6 +178,8 @@ def generate_service_block(i):
       - -Q
       - data
       - --concurrency=1
+      - --time-limit=600
+      - --soft-time-limit=540
     depends_on:
       - postgres-cache-{i}
       - redis-cache-{i}
@@ -190,52 +187,22 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: always
     networks:
-      {network}:
-        aliases:
-          - worker-query-{i}
-          - worker-query
+      - {network}
 
   instance{i}:
     build:
       context: {augur_path}
       dockerfile: docker/Dockerfile
-    command:
-      - gunicorn
-      - --reload
-      - --bind
-      - :8080
-      - app:server
-      - --workers
-      - "1"
-      - --threads
-      - "2"
     ports:
       - "{port}:8080"
     env_file:
       - envs/instance{i}.env
-    environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
-      worker-callback-{i}:
-        condition: service_started
-      worker-query-{i}:
-        condition: service_started
-      redis-cache-{i}:
-        condition: service_started
-      redis-users-{i}:
-        condition: service_started
-      postgres-cache-{i}:
-        condition: service_healthy
       db-init-{i}:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      {network}:
-        aliases:
-          - instance{i}
-          - instance
+      - {network}
 """
 
 def generate_volumes():
