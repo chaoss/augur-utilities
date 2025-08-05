@@ -2,12 +2,11 @@ COMPOSE = podman-compose
 INSTANCES = 8
 DOMAIN = augurlabs.io
 INSTANCE ?= 1
-
-all: up
+REGEN_ARGS ?=
 
 regen:
 	@echo "Rebuilding docker-compose.yml ..."
-	python3 generate_compose.py
+	python3 generate_compose.py $(REGEN_ARGS)
 
 build:
 	$(COMPOSE) build
