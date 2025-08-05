@@ -88,7 +88,6 @@ def generate_service_block(i):
     networks:
       {network}:
         aliases:
-          - redis-cache-{i}
           - redis-cache
 
   redis-users-{i}:
@@ -103,11 +102,10 @@ def generate_service_block(i):
     networks:
       {network}:
         aliases:
-          - redis-users-{i}
           - redis-users
 
   postgres-cache-{i}:
-    image: docker.io/library/postgres:17
+    image: docker.io/library/postgres:16
     command:
       - postgres
       - -c
@@ -127,7 +125,6 @@ def generate_service_block(i):
     networks:
       {network}:
         aliases:
-          - postgres-cache-{i}
           - postgres-cache
 
   db-init-{i}:
@@ -144,10 +141,7 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: on-failure:1000
     networks:
-      {network}:
-        aliases:
-          - db-init-{i}
-          - db-init
+      - {network}
 
   worker-callback-{i}:
     build:
@@ -170,10 +164,7 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: always
     networks:
-      {network}:
-        aliases:
-          - worker-callback-{i}
-          - worker-callback
+      - {network}
 
   worker-query-{i}:
     build:
@@ -197,10 +188,7 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: always
     networks:
-      {network}:
-        aliases:
-          - worker-query-{i}
-          - worker-query
+      - {network}
 
   instance{i}:
     build:
@@ -215,10 +203,7 @@ def generate_service_block(i):
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      {network}:
-        aliases:
-          - instance{i}
-          - instance
+      - {network}
 """
 
 def generate_volumes():

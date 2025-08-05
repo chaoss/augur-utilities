@@ -88,6 +88,7 @@ def generate_service_block(i):
     networks:
       {network}:
         aliases:
+          - redis-cache-{i}
           - redis-cache
 
   redis-users-{i}:
@@ -102,6 +103,7 @@ def generate_service_block(i):
     networks:
       {network}:
         aliases:
+          - redis-users-{i}
           - redis-users
 
   postgres-cache-{i}:
@@ -125,6 +127,7 @@ def generate_service_block(i):
     networks:
       {network}:
         aliases:
+          - postgres-cache-{i}
           - postgres-cache
 
   db-init-{i}:
@@ -141,7 +144,10 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: on-failure:1000
     networks:
-      - {network}
+      {network}:
+        aliases:
+          - db-init-{i}
+          - db-init
 
   worker-callback-{i}:
     build:
@@ -164,7 +170,10 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: always
     networks:
-      - {network}
+      {network}:
+        aliases:
+          - worker-callback-{i}
+          - worker-callback
 
   worker-query-{i}:
     build:
@@ -188,22 +197,56 @@ def generate_service_block(i):
       - envs/instance{i}.env
     restart: always
     networks:
-      - {network}
+      {network}:
+        aliases:
+          - worker-query-{i}
+          - worker-query
 
   instance{i}:
     build:
       context: {augur_path}
       dockerfile: docker/Dockerfile
+    command:
+      - gunicorn
+      - --reload
+      - --bind
+      - :8080
+      - app:server
+      - --workers
+      - "1"
+      - --threads
+      - "2"
+      - --timeout
+      - "300"
+      - --keep-alive
+      - "5"
     ports:
       - "{port}:8080"
     env_file:
       - envs/instance{i}.env
+    environment:
+      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
+      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
     depends_on:
+      worker-callback-{i}:
+        condition: service_started
+      worker-query-{i}:
+        condition: service_started
+      redis-cache-{i}:
+        condition: service_started
+      redis-users-{i}:
+        condition: service_started
+      postgres-cache-{i}:
+        condition: service_healthy
       db-init-{i}:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
-      - {network}
+      {network}:
+        aliases:
+          - instance{i}
+          - instance
 """
 
 def generate_volumes():
