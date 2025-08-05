@@ -51,7 +51,7 @@ services:
     env_file:
       - envs/instance1.env
     depends_on:
-      - augur1-db
+      - augur_multi_host_1-db_1
       - redis-cache-1
       - redis-users-1
     restart: unless-stopped
@@ -106,7 +106,7 @@ services:
     env_file:
       - envs/instance2.env
     depends_on:
-      - augur2-db
+      - augur_multi_host_2-db_1
       - redis-cache-2
       - redis-users-2
     restart: unless-stopped
@@ -161,7 +161,7 @@ services:
     env_file:
       - envs/instance3.env
     depends_on:
-      - augur3-db
+      - augur_multi_host_3-db_1
       - redis-cache-3
       - redis-users-3
     restart: unless-stopped
@@ -216,7 +216,7 @@ services:
     env_file:
       - envs/instance4.env
     depends_on:
-      - augur4-db
+      - augur_multi_host_4-db_1
       - redis-cache-4
       - redis-users-4
     restart: unless-stopped
@@ -271,7 +271,7 @@ services:
     env_file:
       - envs/instance5.env
     depends_on:
-      - augur5-db
+      - augur_multi_host_5-db_1
       - redis-cache-5
       - redis-users-5
     restart: unless-stopped
@@ -326,7 +326,7 @@ services:
     env_file:
       - envs/instance6.env
     depends_on:
-      - augur6-db
+      - augur_multi_host_6-db_1
       - redis-cache-6
       - redis-users-6
     restart: unless-stopped
@@ -381,7 +381,7 @@ services:
     env_file:
       - envs/instance7.env
     depends_on:
-      - augur7-db
+      - augur_multi_host_7-db_1
       - redis-cache-7
       - redis-users-7
     restart: unless-stopped
@@ -436,7 +436,7 @@ services:
     env_file:
       - envs/instance8.env
     depends_on:
-      - augur8-db
+      - augur_multi_host_8-db_1
       - redis-cache-8
       - redis-users-8
     restart: unless-stopped

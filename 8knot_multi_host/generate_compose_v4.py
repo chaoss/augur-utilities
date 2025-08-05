@@ -53,7 +53,7 @@ AUGUR_PORT={7000 + instance_id}
 AUGUR_DATABASE=augur
 AUGUR_USERNAME=augur
 AUGUR_PASSWORD=augur
-AUGUR_HOST=192.168.1.126
+AUGUR_HOST=augur_multi_host_{instance_id}-db_1
 AUGUR_SCHEMA=augur_data
 AUGUR_LOGIN_ENABLED=False
 """
