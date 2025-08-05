@@ -1,87 +1,14 @@
+# Auto-generated docker-compose.yml
 version: '3.8'
 
 services:
 
-  db-init-1:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["python3", "./cache_manager/db_init.py"]
-    depends_on:
-      postgres-cache-1:
-        condition: service_healthy
-    env_file:
-      - envs/instance1.env
-    restart: on-failure:1000
-    networks:
-      - knot1
-
-  reverse-proxy-1:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - app-server-1
-    ports:
-      - "8081:8081"
-    networks:
-      - knot1
-
-  app-server-1:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command:
-      ["gunicorn", "--reload", "--bind", ":8081", "app:server", "--workers", "1", "--threads", "2", "--timeout", "300", "--keep-alive", "5"]
-    depends_on:
-      - worker-callback-1
-      - worker-query-1
-      - redis-cache-1
-      - redis-users-1
-      - postgres-cache-1
-      - db-init-1
-    env_file:
-      - envs/instance1.env
-    environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
-    restart: always
-    networks:
-      - knot1
-
-  worker-callback-1:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "--concurrency=1", "--time-limit=300", "--soft-time-limit=240"]
-    depends_on:
-      - redis-cache-1
-      - redis-users-1
-      - postgres-cache-1
-    env_file:
-      - envs/instance1.env
-    restart: always
-    networks:
-      - knot1
-
-  worker-query-1:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "-Q", "data", "--concurrency=1", "--time-limit=600", "--soft-time-limit=540"]
-    depends_on:
-      - redis-cache-1
-      - postgres-cache-1
-    env_file:
-      - envs/instance1.env
-    restart: always
-    networks:
-      - knot1
-
   redis-cache-1:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
+    command:
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
       - envs/instance1.env
     restart: always
@@ -90,110 +17,53 @@ services:
 
   redis-users-1:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
-    env_file:
-      - envs/instance1.env
-    restart: always
-    networks:
-      - knot1
-
-  postgres-cache-1:
-    image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
-    volumes:
-      - ./postgres.conf:/etc/postgresql/postgresql.conf:ro
-      - postgres-cache:/var/lib/postgresql/data
-    env_file:
-      - envs/instance1.env
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - knot1
-
-  db-init-2:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["python3", "./cache_manager/db_init.py"]
-    depends_on:
-      postgres-cache-2:
-        condition: service_healthy
-    env_file:
-      - envs/instance2.env
-    restart: on-failure:1000
-    networks:
-      - knot2
-
-  reverse-proxy-2:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - app-server-2
-    ports:
-      - "8082:8082"
-    networks:
-      - knot2
-
-  app-server-2:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
     command:
-      ["gunicorn", "--reload", "--bind", ":8082", "app:server", "--workers", "1", "--threads", "2", "--timeout", "300", "--keep-alive", "5"]
-    depends_on:
-      - worker-callback-2
-      - worker-query-2
-      - redis-cache-2
-      - redis-users-2
-      - postgres-cache-2
-      - db-init-2
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
-      - envs/instance2.env
+      - envs/instance1.env
+    restart: always
+    networks:
+      - knot1
+
+  augur1-db:
+    image: docker.io/library/postgres:17
+    restart: unless-stopped
     environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
-    restart: always
+      - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
+      - POSTGRES_PASSWORD=augur
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - augur1_db_data:/var/lib/postgresql/data
+      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur1/pg_hba.conf:/etc/postgresql/pg_hba.conf
     networks:
-      - knot2
+      - knot1
 
-  worker-callback-2:
+  instance1:
     build:
       context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "--concurrency=1", "--time-limit=300", "--soft-time-limit=240"]
-    depends_on:
-      - redis-cache-2
-      - redis-users-2
-      - postgres-cache-2
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8081:5000"
     env_file:
-      - envs/instance2.env
-    restart: always
-    networks:
-      - knot2
-
-  worker-query-2:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "-Q", "data", "--concurrency=1", "--time-limit=600", "--soft-time-limit=540"]
+      - envs/instance1.env
     depends_on:
-      - redis-cache-2
-      - postgres-cache-2
-    env_file:
-      - envs/instance2.env
-    restart: always
+      - augur1-db
+      - redis-cache-1
+      - redis-users-1
+    restart: unless-stopped
     networks:
-      - knot2
+      - knot1
 
   redis-cache-2:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
+    command:
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
       - envs/instance2.env
     restart: always
@@ -202,110 +72,53 @@ services:
 
   redis-users-2:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
-    env_file:
-      - envs/instance2.env
-    restart: always
-    networks:
-      - knot2
-
-  postgres-cache-2:
-    image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
-    volumes:
-      - ./postgres.conf:/etc/postgresql/postgresql.conf:ro
-      - postgres-cache:/var/lib/postgresql/data
-    env_file:
-      - envs/instance2.env
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - knot2
-
-  db-init-3:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["python3", "./cache_manager/db_init.py"]
-    depends_on:
-      postgres-cache-3:
-        condition: service_healthy
-    env_file:
-      - envs/instance3.env
-    restart: on-failure:1000
-    networks:
-      - knot3
-
-  reverse-proxy-3:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - app-server-3
-    ports:
-      - "8083:8083"
-    networks:
-      - knot3
-
-  app-server-3:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
     command:
-      ["gunicorn", "--reload", "--bind", ":8083", "app:server", "--workers", "1", "--threads", "2", "--timeout", "300", "--keep-alive", "5"]
-    depends_on:
-      - worker-callback-3
-      - worker-query-3
-      - redis-cache-3
-      - redis-users-3
-      - postgres-cache-3
-      - db-init-3
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
-      - envs/instance3.env
+      - envs/instance2.env
+    restart: always
+    networks:
+      - knot2
+
+  augur2-db:
+    image: docker.io/library/postgres:17
+    restart: unless-stopped
     environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
-    restart: always
+      - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
+      - POSTGRES_PASSWORD=augur
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - augur2_db_data:/var/lib/postgresql/data
+      - ./postgres/augur2/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur2/pg_hba.conf:/etc/postgresql/pg_hba.conf
     networks:
-      - knot3
+      - knot2
 
-  worker-callback-3:
+  instance2:
     build:
       context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "--concurrency=1", "--time-limit=300", "--soft-time-limit=240"]
-    depends_on:
-      - redis-cache-3
-      - redis-users-3
-      - postgres-cache-3
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8082:5000"
     env_file:
-      - envs/instance3.env
-    restart: always
-    networks:
-      - knot3
-
-  worker-query-3:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "-Q", "data", "--concurrency=1", "--time-limit=600", "--soft-time-limit=540"]
+      - envs/instance2.env
     depends_on:
-      - redis-cache-3
-      - postgres-cache-3
-    env_file:
-      - envs/instance3.env
-    restart: always
+      - augur2-db
+      - redis-cache-2
+      - redis-users-2
+    restart: unless-stopped
     networks:
-      - knot3
+      - knot2
 
   redis-cache-3:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
+    command:
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
       - envs/instance3.env
     restart: always
@@ -314,110 +127,53 @@ services:
 
   redis-users-3:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
-    env_file:
-      - envs/instance3.env
-    restart: always
-    networks:
-      - knot3
-
-  postgres-cache-3:
-    image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
-    volumes:
-      - ./postgres.conf:/etc/postgresql/postgresql.conf:ro
-      - postgres-cache:/var/lib/postgresql/data
-    env_file:
-      - envs/instance3.env
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - knot3
-
-  db-init-4:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["python3", "./cache_manager/db_init.py"]
-    depends_on:
-      postgres-cache-4:
-        condition: service_healthy
-    env_file:
-      - envs/instance4.env
-    restart: on-failure:1000
-    networks:
-      - knot4
-
-  reverse-proxy-4:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - app-server-4
-    ports:
-      - "8084:8084"
-    networks:
-      - knot4
-
-  app-server-4:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
     command:
-      ["gunicorn", "--reload", "--bind", ":8084", "app:server", "--workers", "1", "--threads", "2", "--timeout", "300", "--keep-alive", "5"]
-    depends_on:
-      - worker-callback-4
-      - worker-query-4
-      - redis-cache-4
-      - redis-users-4
-      - postgres-cache-4
-      - db-init-4
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
-      - envs/instance4.env
+      - envs/instance3.env
+    restart: always
+    networks:
+      - knot3
+
+  augur3-db:
+    image: docker.io/library/postgres:17
+    restart: unless-stopped
     environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
-    restart: always
+      - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
+      - POSTGRES_PASSWORD=augur
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - augur3_db_data:/var/lib/postgresql/data
+      - ./postgres/augur3/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur3/pg_hba.conf:/etc/postgresql/pg_hba.conf
     networks:
-      - knot4
+      - knot3
 
-  worker-callback-4:
+  instance3:
     build:
       context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "--concurrency=1", "--time-limit=300", "--soft-time-limit=240"]
-    depends_on:
-      - redis-cache-4
-      - redis-users-4
-      - postgres-cache-4
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8083:5000"
     env_file:
-      - envs/instance4.env
-    restart: always
-    networks:
-      - knot4
-
-  worker-query-4:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "-Q", "data", "--concurrency=1", "--time-limit=600", "--soft-time-limit=540"]
+      - envs/instance3.env
     depends_on:
-      - redis-cache-4
-      - postgres-cache-4
-    env_file:
-      - envs/instance4.env
-    restart: always
+      - augur3-db
+      - redis-cache-3
+      - redis-users-3
+    restart: unless-stopped
     networks:
-      - knot4
+      - knot3
 
   redis-cache-4:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
+    command:
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
       - envs/instance4.env
     restart: always
@@ -426,110 +182,53 @@ services:
 
   redis-users-4:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
-    env_file:
-      - envs/instance4.env
-    restart: always
-    networks:
-      - knot4
-
-  postgres-cache-4:
-    image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
-    volumes:
-      - ./postgres.conf:/etc/postgresql/postgresql.conf:ro
-      - postgres-cache:/var/lib/postgresql/data
-    env_file:
-      - envs/instance4.env
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - knot4
-
-  db-init-5:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["python3", "./cache_manager/db_init.py"]
-    depends_on:
-      postgres-cache-5:
-        condition: service_healthy
-    env_file:
-      - envs/instance5.env
-    restart: on-failure:1000
-    networks:
-      - knot5
-
-  reverse-proxy-5:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - app-server-5
-    ports:
-      - "8085:8085"
-    networks:
-      - knot5
-
-  app-server-5:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
     command:
-      ["gunicorn", "--reload", "--bind", ":8085", "app:server", "--workers", "1", "--threads", "2", "--timeout", "300", "--keep-alive", "5"]
-    depends_on:
-      - worker-callback-5
-      - worker-query-5
-      - redis-cache-5
-      - redis-users-5
-      - postgres-cache-5
-      - db-init-5
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
-      - envs/instance5.env
+      - envs/instance4.env
+    restart: always
+    networks:
+      - knot4
+
+  augur4-db:
+    image: docker.io/library/postgres:17
+    restart: unless-stopped
     environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
-    restart: always
+      - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
+      - POSTGRES_PASSWORD=augur
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - augur4_db_data:/var/lib/postgresql/data
+      - ./postgres/augur4/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur4/pg_hba.conf:/etc/postgresql/pg_hba.conf
     networks:
-      - knot5
+      - knot4
 
-  worker-callback-5:
+  instance4:
     build:
       context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "--concurrency=1", "--time-limit=300", "--soft-time-limit=240"]
-    depends_on:
-      - redis-cache-5
-      - redis-users-5
-      - postgres-cache-5
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8084:5000"
     env_file:
-      - envs/instance5.env
-    restart: always
-    networks:
-      - knot5
-
-  worker-query-5:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "-Q", "data", "--concurrency=1", "--time-limit=600", "--soft-time-limit=540"]
+      - envs/instance4.env
     depends_on:
-      - redis-cache-5
-      - postgres-cache-5
-    env_file:
-      - envs/instance5.env
-    restart: always
+      - augur4-db
+      - redis-cache-4
+      - redis-users-4
+    restart: unless-stopped
     networks:
-      - knot5
+      - knot4
 
   redis-cache-5:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
+    command:
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
       - envs/instance5.env
     restart: always
@@ -538,110 +237,53 @@ services:
 
   redis-users-5:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
-    env_file:
-      - envs/instance5.env
-    restart: always
-    networks:
-      - knot5
-
-  postgres-cache-5:
-    image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
-    volumes:
-      - ./postgres.conf:/etc/postgresql/postgresql.conf:ro
-      - postgres-cache:/var/lib/postgresql/data
-    env_file:
-      - envs/instance5.env
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - knot5
-
-  db-init-6:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["python3", "./cache_manager/db_init.py"]
-    depends_on:
-      postgres-cache-6:
-        condition: service_healthy
-    env_file:
-      - envs/instance6.env
-    restart: on-failure:1000
-    networks:
-      - knot6
-
-  reverse-proxy-6:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - app-server-6
-    ports:
-      - "8086:8086"
-    networks:
-      - knot6
-
-  app-server-6:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
     command:
-      ["gunicorn", "--reload", "--bind", ":8086", "app:server", "--workers", "1", "--threads", "2", "--timeout", "300", "--keep-alive", "5"]
-    depends_on:
-      - worker-callback-6
-      - worker-query-6
-      - redis-cache-6
-      - redis-users-6
-      - postgres-cache-6
-      - db-init-6
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
-      - envs/instance6.env
+      - envs/instance5.env
+    restart: always
+    networks:
+      - knot5
+
+  augur5-db:
+    image: docker.io/library/postgres:17
+    restart: unless-stopped
     environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
-    restart: always
+      - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
+      - POSTGRES_PASSWORD=augur
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - augur5_db_data:/var/lib/postgresql/data
+      - ./postgres/augur5/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur5/pg_hba.conf:/etc/postgresql/pg_hba.conf
     networks:
-      - knot6
+      - knot5
 
-  worker-callback-6:
+  instance5:
     build:
       context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "--concurrency=1", "--time-limit=300", "--soft-time-limit=240"]
-    depends_on:
-      - redis-cache-6
-      - redis-users-6
-      - postgres-cache-6
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8085:5000"
     env_file:
-      - envs/instance6.env
-    restart: always
-    networks:
-      - knot6
-
-  worker-query-6:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "-Q", "data", "--concurrency=1", "--time-limit=600", "--soft-time-limit=540"]
+      - envs/instance5.env
     depends_on:
-      - redis-cache-6
-      - postgres-cache-6
-    env_file:
-      - envs/instance6.env
-    restart: always
+      - augur5-db
+      - redis-cache-5
+      - redis-users-5
+    restart: unless-stopped
     networks:
-      - knot6
+      - knot5
 
   redis-cache-6:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
+    command:
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
       - envs/instance6.env
     restart: always
@@ -650,110 +292,53 @@ services:
 
   redis-users-6:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
-    env_file:
-      - envs/instance6.env
-    restart: always
-    networks:
-      - knot6
-
-  postgres-cache-6:
-    image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
-    volumes:
-      - ./postgres.conf:/etc/postgresql/postgresql.conf:ro
-      - postgres-cache:/var/lib/postgresql/data
-    env_file:
-      - envs/instance6.env
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - knot6
-
-  db-init-7:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["python3", "./cache_manager/db_init.py"]
-    depends_on:
-      postgres-cache-7:
-        condition: service_healthy
-    env_file:
-      - envs/instance7.env
-    restart: on-failure:1000
-    networks:
-      - knot7
-
-  reverse-proxy-7:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - app-server-7
-    ports:
-      - "8087:8087"
-    networks:
-      - knot7
-
-  app-server-7:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
     command:
-      ["gunicorn", "--reload", "--bind", ":8087", "app:server", "--workers", "1", "--threads", "2", "--timeout", "300", "--keep-alive", "5"]
-    depends_on:
-      - worker-callback-7
-      - worker-query-7
-      - redis-cache-7
-      - redis-users-7
-      - postgres-cache-7
-      - db-init-7
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
-      - envs/instance7.env
+      - envs/instance6.env
+    restart: always
+    networks:
+      - knot6
+
+  augur6-db:
+    image: docker.io/library/postgres:17
+    restart: unless-stopped
     environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
-    restart: always
+      - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
+      - POSTGRES_PASSWORD=augur
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - augur6_db_data:/var/lib/postgresql/data
+      - ./postgres/augur6/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur6/pg_hba.conf:/etc/postgresql/pg_hba.conf
     networks:
-      - knot7
+      - knot6
 
-  worker-callback-7:
+  instance6:
     build:
       context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "--concurrency=1", "--time-limit=300", "--soft-time-limit=240"]
-    depends_on:
-      - redis-cache-7
-      - redis-users-7
-      - postgres-cache-7
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8086:5000"
     env_file:
-      - envs/instance7.env
-    restart: always
-    networks:
-      - knot7
-
-  worker-query-7:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "-Q", "data", "--concurrency=1", "--time-limit=600", "--soft-time-limit=540"]
+      - envs/instance6.env
     depends_on:
-      - redis-cache-7
-      - postgres-cache-7
-    env_file:
-      - envs/instance7.env
-    restart: always
+      - augur6-db
+      - redis-cache-6
+      - redis-users-6
+    restart: unless-stopped
     networks:
-      - knot7
+      - knot6
 
   redis-cache-7:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
+    command:
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
       - envs/instance7.env
     restart: always
@@ -762,110 +347,53 @@ services:
 
   redis-users-7:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
-    env_file:
-      - envs/instance7.env
-    restart: always
-    networks:
-      - knot7
-
-  postgres-cache-7:
-    image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
-    volumes:
-      - ./postgres.conf:/etc/postgresql/postgresql.conf:ro
-      - postgres-cache:/var/lib/postgresql/data
-    env_file:
-      - envs/instance7.env
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - knot7
-
-  db-init-8:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["python3", "./cache_manager/db_init.py"]
-    depends_on:
-      postgres-cache-8:
-        condition: service_healthy
-    env_file:
-      - envs/instance8.env
-    restart: on-failure:1000
-    networks:
-      - knot8
-
-  reverse-proxy-8:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - app-server-8
-    ports:
-      - "8088:8088"
-    networks:
-      - knot8
-
-  app-server-8:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
     command:
-      ["gunicorn", "--reload", "--bind", ":8088", "app:server", "--workers", "1", "--threads", "2", "--timeout", "300", "--keep-alive", "5"]
-    depends_on:
-      - worker-callback-8
-      - worker-query-8
-      - redis-cache-8
-      - redis-users-8
-      - postgres-cache-8
-      - db-init-8
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
-      - envs/instance8.env
+      - envs/instance7.env
+    restart: always
+    networks:
+      - knot7
+
+  augur7-db:
+    image: docker.io/library/postgres:17
+    restart: unless-stopped
     environment:
-      - EIGHTKNOT_SEARCHBAR_OPTS_SORT=shortest
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_RESULTS=5500
-      - EIGHTKNOT_SEARCHBAR_OPTS_MAX_REPOS=5000
-    restart: always
+      - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
+      - POSTGRES_PASSWORD=augur
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - augur7_db_data:/var/lib/postgresql/data
+      - ./postgres/augur7/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur7/pg_hba.conf:/etc/postgresql/pg_hba.conf
     networks:
-      - knot8
+      - knot7
 
-  worker-callback-8:
+  instance7:
     build:
       context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "--concurrency=1", "--time-limit=300", "--soft-time-limit=240"]
-    depends_on:
-      - redis-cache-8
-      - redis-users-8
-      - postgres-cache-8
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8087:5000"
     env_file:
-      - envs/instance8.env
-    restart: always
-    networks:
-      - knot8
-
-  worker-query-8:
-    build:
-      context: /home/sean/github/8knot
-      dockerfile: ./docker/Dockerfile
-    command: ["celery", "-A", "app:celery_app", "worker", "--loglevel=INFO", "-Q", "data", "--concurrency=1", "--time-limit=600", "--soft-time-limit=540"]
+      - envs/instance7.env
     depends_on:
-      - redis-cache-8
-      - postgres-cache-8
-    env_file:
-      - envs/instance8.env
-    restart: always
+      - augur7-db
+      - redis-cache-7
+      - redis-users-7
+    restart: unless-stopped
     networks:
-      - knot8
+      - knot7
 
   redis-cache-8:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
+    command:
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
       - envs/instance8.env
     restart: always
@@ -874,30 +402,57 @@ services:
 
   redis-users-8:
     image: docker.io/library/redis:6
-    command: ["/bin/sh", "-c", "redis-server --requirepass "$$REDIS_PASSWORD""]
+    command:
+      - /bin/sh
+      - -c
+      - 'redis-server --requirepass "$$REDIS_PASSWORD"'
     env_file:
       - envs/instance8.env
     restart: always
     networks:
       - knot8
 
-  postgres-cache-8:
-    image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+  augur8-db:
+    image: docker.io/library/postgres:17
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=augur
+      - POSTGRES_USER=augur
+      - POSTGRES_PASSWORD=augur
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - ./postgres.conf:/etc/postgresql/postgresql.conf:ro
-      - postgres-cache:/var/lib/postgresql/data
-    env_file:
-      - envs/instance8.env
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - augur8_db_data:/var/lib/postgresql/data
+      - ./postgres/augur8/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur8/pg_hba.conf:/etc/postgresql/pg_hba.conf
     networks:
       - knot8
 
+  instance8:
+    build:
+      context: /home/sean/github/8knot
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8088:5000"
+    env_file:
+      - envs/instance8.env
+    depends_on:
+      - augur8-db
+      - redis-cache-8
+      - redis-users-8
+    restart: unless-stopped
+    networks:
+      - knot8
+
+
+volumes:
+  augur1_db_data:
+  augur2_db_data:
+  augur3_db_data:
+  augur4_db_data:
+  augur5_db_data:
+  augur6_db_data:
+  augur7_db_data:
+  augur8_db_data:
 
 networks:
   knot1:
@@ -908,7 +463,3 @@ networks:
   knot6:
   knot7:
   knot8:
-
-
-volumes:
-  postgres-cache:
