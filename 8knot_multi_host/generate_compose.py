@@ -53,7 +53,7 @@ AUGUR_PORT={7000 + instance_id}
 AUGUR_DATABASE=augur
 AUGUR_USERNAME=augur
 AUGUR_PASSWORD=augur
-AUGUR_HOST=augur{instance_id}-db
+AUGUR_HOST=augur_multi_host_{instance_id}-db_1
 AUGUR_SCHEMA=augur_data
 AUGUR_LOGIN_ENABLED=False
 """
@@ -119,7 +119,7 @@ def generate_service_block(instance_id):
     env_file:
       - envs/instance{instance_id}.env
     depends_on:
-      - augur{instance_id}-db
+      - augur_multi_host_{instance_id}-db_1
       - redis-cache-{instance_id}
       - redis-users-{instance_id}
     restart: unless-stopped
