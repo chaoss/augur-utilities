@@ -50,7 +50,7 @@ def generate_env_file(i):
 
     label = labels[i - 1]
 
-    content = f"""POSTGRES_PASSWORD=augur
+    content = f"""POSTGRES_PASSWORD=password
 REDIS_PASSWORD=redispass{i}
 AUGUR_PORT={7000 + i}
 AUGUR_DATABASE=augur
