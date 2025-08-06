@@ -121,7 +121,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - augur1_db_data:/var/lib/postgresql/data
+      - postgres-cache_1:/var/lib/postgresql/data
       - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance1.env
@@ -251,7 +251,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - augur1_db_data:/var/lib/postgresql/data
+      - postgres-cache_2:/var/lib/postgresql/data
       - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance2.env
@@ -381,7 +381,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - augur1_db_data:/var/lib/postgresql/data
+      - postgres-cache_3:/var/lib/postgresql/data
       - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance3.env
@@ -511,7 +511,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - augur1_db_data:/var/lib/postgresql/data
+      - postgres-cache_4:/var/lib/postgresql/data
       - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance4.env
@@ -641,7 +641,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - augur1_db_data:/var/lib/postgresql/data
+      - postgres-cache_5:/var/lib/postgresql/data
       - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance5.env
@@ -771,7 +771,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - augur1_db_data:/var/lib/postgresql/data
+      - postgres-cache_6:/var/lib/postgresql/data
       - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance6.env
@@ -901,7 +901,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - augur1_db_data:/var/lib/postgresql/data
+      - postgres-cache_7:/var/lib/postgresql/data
       - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance7.env
@@ -1031,7 +1031,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - augur1_db_data:/var/lib/postgresql/data
+      - postgres-cache_8:/var/lib/postgresql/data
       - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance8.env
