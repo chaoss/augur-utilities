@@ -1,8 +1,0 @@
-openmm
-networkx
-neurodesk
-crsu-apps
-cran
-superelastix
-slicer
-chaoss
