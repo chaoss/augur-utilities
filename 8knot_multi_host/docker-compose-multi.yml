@@ -123,6 +123,7 @@ services:
     volumes:
       - postgres-cache_1:/var/lib/postgresql/data
       - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur1/pg_hba.conf:/etc/postgresql/pg_hba.conf
     env_file:
       - instance1.env
     restart: always
@@ -252,7 +253,8 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - postgres-cache_2:/var/lib/postgresql/data
-      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur2/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur2/pg_hba.conf:/etc/postgresql/pg_hba.conf
     env_file:
       - instance2.env
     restart: always
@@ -382,7 +384,8 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - postgres-cache_3:/var/lib/postgresql/data
-      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur3/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur3/pg_hba.conf:/etc/postgresql/pg_hba.conf
     env_file:
       - instance3.env
     restart: always
@@ -512,7 +515,8 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - postgres-cache_4:/var/lib/postgresql/data
-      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur4/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur4/pg_hba.conf:/etc/postgresql/pg_hba.conf
     env_file:
       - instance4.env
     restart: always
@@ -642,7 +646,8 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - postgres-cache_5:/var/lib/postgresql/data
-      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur5/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur5/pg_hba.conf:/etc/postgresql/pg_hba.conf
     env_file:
       - instance5.env
     restart: always
@@ -772,7 +777,8 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - postgres-cache_6:/var/lib/postgresql/data
-      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur6/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur6/pg_hba.conf:/etc/postgresql/pg_hba.conf
     env_file:
       - instance6.env
     restart: always
@@ -902,7 +908,8 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - postgres-cache_7:/var/lib/postgresql/data
-      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur7/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur7/pg_hba.conf:/etc/postgresql/pg_hba.conf
     env_file:
       - instance7.env
     restart: always
@@ -1032,7 +1039,8 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - postgres-cache_8:/var/lib/postgresql/data
-      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur8/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/augur8/pg_hba.conf:/etc/postgresql/pg_hba.conf
     env_file:
       - instance8.env
     restart: always
