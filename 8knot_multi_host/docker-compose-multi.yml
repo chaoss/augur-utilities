@@ -17,7 +17,7 @@ services:
   reverse-proxy_1:
     image: docker.io/library/nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_1.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app-server_1
     ports:
@@ -147,7 +147,7 @@ services:
   reverse-proxy_2:
     image: docker.io/library/nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_2.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app-server_2
     ports:
@@ -277,7 +277,7 @@ services:
   reverse-proxy_3:
     image: docker.io/library/nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_3.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app-server_3
     ports:
@@ -407,7 +407,7 @@ services:
   reverse-proxy_4:
     image: docker.io/library/nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_4.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app-server_4
     ports:
@@ -537,7 +537,7 @@ services:
   reverse-proxy_5:
     image: docker.io/library/nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_5.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app-server_5
     ports:
@@ -667,7 +667,7 @@ services:
   reverse-proxy_6:
     image: docker.io/library/nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_6.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app-server_6
     ports:
@@ -797,7 +797,7 @@ services:
   reverse-proxy_7:
     image: docker.io/library/nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_7.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app-server_7
     ports:
@@ -927,7 +927,7 @@ services:
   reverse-proxy_8:
     image: docker.io/library/nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_8.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app-server_8
     ports:
