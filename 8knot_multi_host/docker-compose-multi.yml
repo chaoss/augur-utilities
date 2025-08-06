@@ -117,9 +117,12 @@ services:
 
   postgres-cache_1:
     image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgresql.conf"]
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - /home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgres.conf:/etc/postgresql/postgresql.conf:Z
+      - augur1_db_data:/var/lib/postgresql/data
+      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance1.env
     restart: always
@@ -244,9 +247,12 @@ services:
 
   postgres-cache_2:
     image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgresql.conf"]
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - /home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgres.conf:/etc/postgresql/postgresql.conf:Z
+      - augur1_db_data:/var/lib/postgresql/data
+      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance2.env
     restart: always
@@ -371,9 +377,12 @@ services:
 
   postgres-cache_3:
     image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgresql.conf"]
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - /home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgres.conf:/etc/postgresql/postgresql.conf:Z
+      - augur1_db_data:/var/lib/postgresql/data
+      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance3.env
     restart: always
@@ -498,9 +507,12 @@ services:
 
   postgres-cache_4:
     image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgresql.conf"]
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - /home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgres.conf:/etc/postgresql/postgresql.conf:Z
+      - augur1_db_data:/var/lib/postgresql/data
+      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance4.env
     restart: always
@@ -625,9 +637,12 @@ services:
 
   postgres-cache_5:
     image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgresql.conf"]
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - /home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgres.conf:/etc/postgresql/postgresql.conf:Z
+      - augur1_db_data:/var/lib/postgresql/data
+      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance5.env
     restart: always
@@ -752,9 +767,12 @@ services:
 
   postgres-cache_6:
     image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgresql.conf"]
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - /home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgres.conf:/etc/postgresql/postgresql.conf:Z
+      - augur1_db_data:/var/lib/postgresql/data
+      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance6.env
     restart: always
@@ -879,9 +897,12 @@ services:
 
   postgres-cache_7:
     image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgresql.conf"]
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - /home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgres.conf:/etc/postgresql/postgresql.conf:Z
+      - augur1_db_data:/var/lib/postgresql/data
+      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance7.env
     restart: always
@@ -1006,9 +1027,12 @@ services:
 
   postgres-cache_8:
     image: docker.io/library/postgres:16
-    command: ["postgres", "-c", "config_file=/home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgresql.conf"]
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - /home/sean/github/augur-utilities/8knot_multi_host/postgres/augur1/postgres.conf:/etc/postgresql/postgresql.conf:Z
+      - augur1_db_data:/var/lib/postgresql/data
+      - ./postgres/augur1/postgresql.conf:/etc/postgresql/postgresql.conf
     env_file:
       - instance8.env
     restart: always
