@@ -151,9 +151,9 @@ services:
   redis-cache{suffix}:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${{REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}}"
+      - redis-server
+      - --requirepass
+      - redispass{i}
     env_file:
       - {env_file}
     restart: always
@@ -161,9 +161,9 @@ services:
   redis-users{suffix}:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${{REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}}"
+      - redis-server
+      - --requirepass
+      - redispass{i + 1}
     env_file:
       - {env_file}
     restart: always

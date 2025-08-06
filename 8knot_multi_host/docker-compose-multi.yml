@@ -98,9 +98,9 @@ services:
   redis-cache_1:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass1
     env_file:
       - instance1.env
     restart: always
@@ -108,9 +108,9 @@ services:
   redis-users_1:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass2
     env_file:
       - instance1.env
     restart: always
@@ -225,9 +225,9 @@ services:
   redis-cache_2:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass2
     env_file:
       - instance2.env
     restart: always
@@ -235,9 +235,9 @@ services:
   redis-users_2:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass3
     env_file:
       - instance2.env
     restart: always
@@ -352,9 +352,9 @@ services:
   redis-cache_3:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass3
     env_file:
       - instance3.env
     restart: always
@@ -362,9 +362,9 @@ services:
   redis-users_3:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass4
     env_file:
       - instance3.env
     restart: always
@@ -479,9 +479,9 @@ services:
   redis-cache_4:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass4
     env_file:
       - instance4.env
     restart: always
@@ -489,9 +489,9 @@ services:
   redis-users_4:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass5
     env_file:
       - instance4.env
     restart: always
@@ -606,9 +606,9 @@ services:
   redis-cache_5:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass5
     env_file:
       - instance5.env
     restart: always
@@ -616,9 +616,9 @@ services:
   redis-users_5:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass6
     env_file:
       - instance5.env
     restart: always
@@ -733,9 +733,9 @@ services:
   redis-cache_6:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass6
     env_file:
       - instance6.env
     restart: always
@@ -743,9 +743,9 @@ services:
   redis-users_6:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass7
     env_file:
       - instance6.env
     restart: always
@@ -860,9 +860,9 @@ services:
   redis-cache_7:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass7
     env_file:
       - instance7.env
     restart: always
@@ -870,9 +870,9 @@ services:
   redis-users_7:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass8
     env_file:
       - instance7.env
     restart: always
@@ -987,9 +987,9 @@ services:
   redis-cache_8:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass8
     env_file:
       - instance8.env
     restart: always
@@ -997,9 +997,9 @@ services:
   redis-users_8:
     image: docker.io/library/redis:6
     command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server
+      - --requirepass
+      - redispass9
     env_file:
       - instance8.env
     restart: always
