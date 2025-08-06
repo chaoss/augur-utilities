@@ -41,7 +41,6 @@ help:
 	@echo ""
 	@echo "Teardown & Cleanup:"
 	@echo "  make stop-all            Stop all running podman containers"
-	@echo "  make clean               Remove containers/images/networks (preserves DB volumes)"
 	@echo "  make nuke                Remove all instance containers and non-DB volumes"
 	@echo "  make clean-networks      Remove augur-related podman networks"
 	@echo ""
@@ -102,14 +101,6 @@ up:
 down:
 	$(COMPOSE) down --remove-orphans
 
-# Safe clean: removes containers/networks/images, but NOT DB volumes
-clean: down nuke
-	@echo "Cleaning up unused resources (excluding named DB volumes)..."
-	@podman volume prune -f
-	@podman image prune -f
-	@podman network prune -f
-	@echo "Clean complete."
-
 restart:
 	$(COMPOSE) restart
 
@@ -150,12 +141,22 @@ clean-networks:
 	-podman network ls --format "{{.Name}}" | grep augur_multi_host_augur | xargs -I {} podman network rm {}
 
 nuke:
-	-@echo "Removing instance containers..."
-	-@podman ps -a --format "{{.ID}} {{.Names}}" | grep instance | awk '{print $$1}' | xargs -r podman rm -f
-	-@echo "Removing instance volumes (excluding DB volumes)..."
-	-@podman volume ls --format "{{.Name}}" | grep instance | grep -v postgres | xargs -r podman volume rm
-	-@echo "Removing networks with 'knot' in their name..."
-	-@podman network ls --format "{{.Name}}" | grep knot | xargs -r podman network rm
+	@echo "Removing instance containers..."
+	@podman ps -a --format "{{.ID}} {{.Names}}" | grep instance | awk '{print $$1}' | xargs -r podman rm -f
+
+	@echo "Removing instance volumes (excluding DB volumes)..."
+	@DB_VOLUMES="$$(seq 1 8 | xargs -I{} echo augur_multi_host_augur{}-postgres)"; \
+	for vol in $$(podman volume ls --format "{{.Name}}" | grep instance); do \
+		if echo "$$DB_VOLUMES" | grep -qw "$$vol"; then \
+			echo "🔒 Skipping DB volume: $$vol"; \
+		else \
+			echo "🗑️  Removing volume: $$vol"; \
+			podman volume rm "$$vol"; \
+		fi; \
+	done
+
+	@echo "Removing networks with 'knot' in their name..."
+	@podman network ls --format "{{.Name}}" | grep knot | xargs -r podman network rm
 
 snapshot-all:
 	@echo "📦 Running full instance + config + Redis snapshot..."
