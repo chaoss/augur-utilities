@@ -1,3 +1,5 @@
+*.logs
+*.err
 docker-compose.yml
 nginx.conf
 envs/
