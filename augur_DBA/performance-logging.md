@@ -26,6 +26,7 @@
     ```sql
     ALTER SYSTEM SET log_connections = 'on';
     ALTER SYSTEM SET log_disconnections = 'on';
+    ALTER SYSTEM SET log_lock_waits TO 'on';
     ALTER SYSTEM SET log_hostname = 'on';
     ALTER SYSTEM SET log_line_prefix = '%m [%p] %h %u@%d %a ';
     SELECT pg_reload_conf();
