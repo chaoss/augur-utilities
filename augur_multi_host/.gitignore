@@ -1,3 +1,6 @@
+*.logs
+*.err
 docker-compose.yml
 nginx.conf
 envs/
+pg_backups/

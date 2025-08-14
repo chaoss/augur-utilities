@@ -45,6 +45,7 @@ service_block = """
       - POSTGRES_USER=augur
       - POSTGRES_PASSWORD=augur
       - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_INITDB_ARGS=--config-file=/etc/postgresql/postgresql.conf
     ports:
       - "{pg_port}:5432"
     volumes:
