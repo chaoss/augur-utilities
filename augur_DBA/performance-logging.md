@@ -21,3 +21,12 @@
     ```
 
     Obviously, replace the log location with wherever your exists (this location is standard for Ubuntu 24.x) and make sure the directory you are writing to exists. 
+
+6. If you are interested in tracking connection information (how many, how long, activity), these parameters are also necessary: 
+    ```sql
+    ALTER SYSTEM SET log_connections = 'on';
+    ALTER SYSTEM SET log_disconnections = 'on';
+    ALTER SYSTEM SET log_hostname = 'on';
+    ALTER SYSTEM SET log_line_prefix = '%m [%p] %h %u@%d %a ';
+    SELECT pg_reload_conf();
+    ```
