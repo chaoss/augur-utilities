@@ -102,7 +102,7 @@ def encrypt_columns(conn, cursor, encryption_key, fields_to_encrypt={}, schema="
                 ]
             }
         
-        for table, columns in fields_to_encrypt:
+        for table, columns in fields_to_encrypt.items():
             print(f"Encrypting table {table}...")
             for field in columns:
                 # Build the query string using .format() instead of an f-string.
