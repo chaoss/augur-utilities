@@ -31,7 +31,8 @@ def main(secret_key):
     cursor = conn.cursor()
     
     encrypt_columns(conn, cursor, secret_key)
-
+    
+    cursor.close()
     conn.close()
 
 if __name__ == "__main__":

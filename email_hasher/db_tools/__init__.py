@@ -128,5 +128,3 @@ def encrypt_columns(conn, cursor, encryption_key, fields_to_encrypt={}, schema="
         print("An error occurred:")
         traceback.print_exc()
         conn.rollback()
-    finally:
-        cursor.close()
