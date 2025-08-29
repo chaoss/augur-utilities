@@ -21,6 +21,8 @@ def main(secret_key):
         print("Database configuration could not be loaded. Exiting.")
         return
 
+    wait_for_port("localhost", db_config.get("port", 5432))
+
     conn = connect_to_db(db_config)
     if conn is None:
         print("Database connection failed. Exiting.")
