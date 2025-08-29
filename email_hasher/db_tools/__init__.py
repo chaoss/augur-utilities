@@ -99,7 +99,10 @@ def encrypt_columns(conn, cursor, encryption_key, fields_to_encrypt={}, schema="
                 "contributors": [
                     "cntrb_email",
                     "cntrb_canonical"
-                ]
+                ],
+                "users": [
+                    "email",
+                ],
             }
         
         for table, columns in fields_to_encrypt.items():
