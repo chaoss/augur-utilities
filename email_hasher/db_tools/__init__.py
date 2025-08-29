@@ -104,15 +104,15 @@ def encrypt_columns(conn, cursor, encryption_key, fields_to_encrypt={}):
             print(f"Encrypting table {table}...")
             for field in columns:
                 # Build the query string using .format() instead of an f-string.
-                print(f"Encrypting column {field}...")
+                print(f"Encrypting column {table}.{field}...")
                 query = """
-                    UPDATE augur_data.commits
+                    UPDATE augur_data.{table}
                     SET {field} = encode(
                         augur_data.pgp_sym_encrypt({field}::text, '{secret_key}'::text),
                         'base64'
                     )
                     WHERE {field} IS NOT NULL;
-                """.format(field=field, secret_key=encryption_key)
+                """.format(table=table, field=field, secret_key=encryption_key)
                 cursor.execute(query)
                 conn.commit()
                 print("Encrypted column:", field)
