@@ -2,6 +2,31 @@ import psycopg2
 import traceback
 import json
 
+import socket
+import time
+
+
+def is_port_in_use(host, port):
+    """
+    Checks if a port is in use by trying to bind to it.
+    This method avoids establishing a connection.
+
+    Args:
+        host (str): The hostname or IP address to check.
+        port (int): The port number to check.
+
+    Returns:
+        bool: True if the port is in use, False otherwise.
+    """
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        try:
+            # Try to bind to the port. If it's already in use, this will raise an OSError.
+            s.bind((host, port))
+            # If we successfully bind, the port is NOT in use.
+            return False
+        except OSError:
+            # If an OSError occurs, it means the port is already bound by another process.
+            return True
 
 # Read database connection details from JSON file
 def read_db_config(file_path="db.config.json"):
