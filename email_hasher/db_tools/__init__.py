@@ -42,7 +42,7 @@ def run_query(conn, cursor, query):
         cursor.close()
 
 
-def encrypt_emails(conn, cursor, encryption_key, fields_to_encrypt={}):
+def encrypt_columns(conn, cursor, encryption_key, fields_to_encrypt={}):
     try:
         # Ensure the pgcrypto extension is available.
         cursor.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA augur_data;")
