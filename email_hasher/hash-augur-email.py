@@ -12,10 +12,7 @@
         FROM your_table;
 """
 # -- Enable the pgcrypto extension if not already enabled.
-import psycopg2
-import json
 import sys
-import traceback
 from email_hasher.helpers import encrypt_emails, read_db_config, connect_to_db
 
 def main(secret_key):
