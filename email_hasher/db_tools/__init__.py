@@ -28,6 +28,20 @@ def connect_to_db(db_config):
         return None
 
 
+def run_query(conn, cursor, query):
+    try:
+        # Ensure the pgcrypto extension is available.
+        cursor.execute(query)
+        conn.commit()
+
+    except Exception as e:
+        print("An error occurred:")
+        traceback.print_exc()
+        conn.rollback()
+    finally:
+        cursor.close()
+
+
 def encrypt_emails(conn, cursor, encryption_key):
     try:
         # Ensure the pgcrypto extension is available.
