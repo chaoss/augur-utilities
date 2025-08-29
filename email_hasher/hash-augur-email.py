@@ -16,6 +16,7 @@ import psycopg2
 import json
 import sys
 import traceback
+from email_hasher.helpers import encrypt_emails
 
 # Read database connection details from JSON file
 def read_db_config(file_path="db.config.json"):
@@ -53,42 +54,10 @@ def main(secret_key):
         return
 
     cursor = conn.cursor()
-    try:
-        # Ensure the pgcrypto extension is available.
-        cursor.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
-        conn.commit()
+    
+    encrypt_emails(conn, cursor, secret_key)
 
-        # List of columns to encrypt.
-        fields_to_encrypt = [
-            "cmt_author_raw_email",
-            "cmt_author_email",
-            "cmt_committer_raw_email",
-            "cmt_committer_email"
-        ]
-
-        for field in fields_to_encrypt:
-            # Build the query string using .format() instead of an f-string.
-            query = """
-                UPDATE augur_data.commits
-                SET {field} = encode(
-                    augur_data.pgp_sym_encrypt({field}::text, '{secret_key}'::text),
-                    'base64'
-                )
-                WHERE {field} IS NOT NULL;
-            """.format(field=field, secret_key=secret_key)
-            cursor.execute(query)
-            conn.commit()
-            print("Encrypted column:", field)
-
-        print("All encryption updates applied successfully.")
-
-    except Exception as e:
-        print("An error occurred:")
-        traceback.print_exc()
-        conn.rollback()
-    finally:
-        cursor.close()
-        conn.close()
+    conn.close()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
