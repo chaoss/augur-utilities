@@ -78,10 +78,10 @@ def run_query(conn, cursor, query):
         cursor.close()
 
 
-def encrypt_columns(conn, cursor, encryption_key, fields_to_encrypt={}):
+def encrypt_columns(conn, cursor, encryption_key, fields_to_encrypt={}, schema="augur_data"):
     try:
         # Ensure the pgcrypto extension is available.
-        cursor.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA augur_data;")
+        cursor.execute(f"CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA {schema};")
         conn.commit()
 
         # List of columns to encrypt.
@@ -106,13 +106,13 @@ def encrypt_columns(conn, cursor, encryption_key, fields_to_encrypt={}):
                 # Build the query string using .format() instead of an f-string.
                 print(f"Encrypting column {table}.{field}...")
                 query = """
-                    UPDATE augur_data.{table}
+                    UPDATE {schema}.{table}
                     SET {field} = encode(
-                        augur_data.pgp_sym_encrypt({field}::text, '{secret_key}'::text),
+                        {schema}.pgp_sym_encrypt({field}::text, '{secret_key}'::text),
                         'base64'
                     )
                     WHERE {field} IS NOT NULL;
-                """.format(table=table, field=field, secret_key=encryption_key)
+                """.format(table=table, field=field, secret_key=encryption_key, schema=schema)
                 cursor.execute(query)
                 conn.commit()
                 print("Encrypted column:", field)
