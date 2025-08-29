@@ -10,10 +10,12 @@ def wait_for_port(host, port, logging=True, retry_interval=2):
     # Loop indefinitely until the port is found to be in use.
     while True:
         if is_port_in_use(host, port):
-            print(f"Success! Port {host}:{port} is now in use.")
+            if logging:
+                print(f"Success! Port {host}:{port} is now in use.")
             break  # Exit the loop once the port is open.
         else:
-            print(f"Port {host}:{port} is not in use. Retrying in {retry_interval} seconds...")
+            if logging:
+                print(f"Port {host}:{port} is not in use. Retrying in {retry_interval} seconds...")
             time.sleep(retry_interval)
 
 
