@@ -1,5 +1,32 @@
 import psycopg2
 import traceback
+import json
+
+
+# Read database connection details from JSON file
+def read_db_config(file_path="db.config.json"):
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error reading database config from {file_path}: {e}")
+        return None
+
+# Connect to PostgreSQL database
+def connect_to_db(db_config):
+    try:
+        conn = psycopg2.connect(
+            dbname=db_config["database_name"],
+            user=db_config["user"],
+            password=db_config["password"],
+            host=db_config["host"],
+            port=db_config["port"]
+        )
+        return conn
+    except Exception as e:
+        print(f"Error connecting to database: {e}")
+        return None
+
 
 def encrypt_emails(conn, cursor, encryption_key):
     try:

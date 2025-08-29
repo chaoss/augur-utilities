@@ -16,31 +16,7 @@ import psycopg2
 import json
 import sys
 import traceback
-from email_hasher.helpers import encrypt_emails
-
-# Read database connection details from JSON file
-def read_db_config(file_path="db.config.json"):
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as e:
-        print(f"Error reading database config from {file_path}: {e}")
-        return None
-
-# Connect to PostgreSQL database
-def connect_to_db(db_config):
-    try:
-        conn = psycopg2.connect(
-            dbname=db_config["database_name"],
-            user=db_config["user"],
-            password=db_config["password"],
-            host=db_config["host"],
-            port=db_config["port"]
-        )
-        return conn
-    except Exception as e:
-        print(f"Error connecting to database: {e}")
-        return None
+from email_hasher.helpers import encrypt_emails, read_db_config, connect_to_db
 
 def main(secret_key):
     db_config = read_db_config()
