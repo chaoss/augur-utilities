@@ -13,7 +13,7 @@
 """
 # -- Enable the pgcrypto extension if not already enabled.
 import sys
-from email_hasher.helpers import encrypt_emails, read_db_config, connect_to_db
+from db_tools import encrypt_emails, read_db_config, connect_to_db
 
 def main(secret_key):
     db_config = read_db_config()
