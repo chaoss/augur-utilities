@@ -79,6 +79,49 @@ def run_query(conn, cursor, query):
     finally:
         cursor.close()
 
+def clear_table(conn, cursor, table, schema="augur_data"):
+    try:
+        print(f"Clearing all values from {schema}.{table}...")
+        query = f"DELETE FROM {schema}.{table};"
+        cursor.execute(query)
+        conn.commit()
+
+        print("All sensitive rows removed successfully.")
+
+    except Exception as e:
+        print("An error occurred:")
+        traceback.print_exc()
+        conn.rollback()
+
+
+def delete_rows(conn, cursor, rows_to_delete={}, schema="augur_data"):
+    try:
+
+        # List of columns to encrypt.
+        if rows_to_delete == {}:
+            # nothing to do
+            return
+        
+        for table, columns in rows_to_delete.items():
+            print(f"Cleaning table {schema}.{table}...")
+            for column, pattern in columns:
+                # Build the query string using .format() instead of an f-string.
+                print(f"\tCleaning column {column} matching pattern {pattern}...")
+                query = f"""
+                    DELETE FROM {schema}.{table}
+                    WHERE {column} LIKE '{pattern}';
+                """
+                cursor.execute(query)
+                conn.commit()
+                print(f"\t\tCleaned values from {column}")
+
+        print("All sensitive rows removed successfully.")
+
+    except Exception as e:
+        print("An error occurred:")
+        traceback.print_exc()
+        conn.rollback()
+
 
 def encrypt_columns(conn, cursor, encryption_key, fields_to_encrypt={}, schema="augur_data"):
     try:

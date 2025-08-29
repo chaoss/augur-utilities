@@ -1,6 +1,6 @@
 #SPDX-License-Identifier: MIT
 import sys
-from db_tools import encrypt_columns, read_db_config, connect_to_db, wait_for_port, delete_rows
+from db_tools import encrypt_columns, read_db_config, connect_to_db, wait_for_port, delete_rows, clear_table
 
 def main(secret_key):
     db_config = read_db_config()
@@ -18,7 +18,17 @@ def main(secret_key):
     cursor = conn.cursor()
     
     encrypt_columns(conn, cursor, secret_key)
+    delete_rows(conn, cursor, {
+        "config": [
+            ("setting_name", '%_api_key'),
+            ("setting_name", "connection_string")
+        ]
+    }, schema="augur_operations")
 
+    clear_table(conn, cursor, "worker_oauth", schema="augur_operations")
+    clear_table(conn, cursor, "user_session_tokens", schema="augur_operations")
+
+    cursor.close()
     conn.close()
 
 if __name__ == "__main__":
