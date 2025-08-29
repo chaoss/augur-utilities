@@ -1,6 +1,6 @@
 #SPDX-License-Identifier: MIT
 import sys
-from db_tools import encrypt_columns, read_db_config, connect_to_db, wait_for_port, delete_rows, clear_table
+from db_tools import encrypt_columns, read_db_config, connect_to_db, wait_for_port, delete_rows, clear_table, run_query
 
 def main(secret_key):
     db_config = read_db_config()
@@ -27,6 +27,8 @@ def main(secret_key):
 
     clear_table(conn, cursor, "worker_oauth", schema="augur_operations")
     clear_table(conn, cursor, "user_session_tokens", schema="augur_operations")
+
+    run_query(conn, cursor, "ALTER USER augur WITH PASSWORD 'augur';")
 
     cursor.close()
     conn.close()
