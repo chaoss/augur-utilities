@@ -55,7 +55,7 @@ def main(secret_key):
     cursor = conn.cursor()
     try:
         # Ensure the pgcrypto extension is available.
-        cursor.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
+        cursor.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA augur_data;")
         conn.commit()
 
         # List of columns to encrypt.
