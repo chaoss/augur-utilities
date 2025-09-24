@@ -99,7 +99,7 @@ up:
 	$(COMPOSE) up -d
 
 down:
-	$(COMPOSE) down 
+	$(COMPOSE) down --remove-orphans 
 
 restart:
 	$(COMPOSE) restart
