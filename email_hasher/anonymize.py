@@ -1,19 +1,6 @@
 #SPDX-License-Identifier: MIT
-""" 
-    _email_columns_
-    cmt_author_raw_email
-    cmt_author_email
-    cmt_committer_raw_email
-    cmt_committer_email
-    
-    ## Decode: 
-
-        SELECT convert_from(pgp_sym_decrypt(decode(your_text_column, 'base64'), 'your_secret_key'), 'UTF8') AS decrypted_text
-        FROM your_table;
-"""
-# -- Enable the pgcrypto extension if not already enabled.
 import sys
-from db_tools import encrypt_columns, read_db_config, connect_to_db, wait_for_port
+from db_tools import encrypt_columns, read_db_config, connect_to_db, wait_for_port, delete_rows, clear_table, run_query
 
 def main(secret_key):
     db_config = read_db_config()
@@ -31,7 +18,18 @@ def main(secret_key):
     cursor = conn.cursor()
     
     encrypt_columns(conn, cursor, secret_key)
-    
+    delete_rows(conn, cursor, {
+        "config": [
+            ("setting_name", '%_api_key'),
+            ("setting_name", "connection_string")
+        ]
+    }, schema="augur_operations")
+
+    clear_table(conn, cursor, "worker_oauth", schema="augur_operations")
+    clear_table(conn, cursor, "user_session_tokens", schema="augur_operations")
+
+    run_query(conn, cursor, "ALTER USER augur WITH PASSWORD 'augur';")
+
     cursor.close()
     conn.close()
 
